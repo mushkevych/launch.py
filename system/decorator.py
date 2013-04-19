@@ -4,7 +4,6 @@ Created on 2012-04-24
 @author: Bohdan Mushkevych
 """
 import functools
-import time
 
 
 def thread_safe(method):

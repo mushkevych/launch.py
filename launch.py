@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from optparse import OptionParser
 import shutil
 import sys
 import subprocess
-
-from os import path
 import virtualenv
-from system import process_context
-from system import process_helper
+
+from optparse import OptionParser
+from os import path
 
 
 PROCESS_STARTER = 'process_starter.py'
@@ -20,28 +18,18 @@ VE_ROOT = path.join(PROJECT_ROOT, '.ve')
 def init_parser():
     """Setup our command line options"""
     parser = OptionParser()
-    parser.add_option("-a", "--app", action="store",
-        help="application to start (process name)")
-    parser.add_option("-n", "--interactive", action="store_true",
-        help="run in interactive (non-daemon) mode")
-    parser.add_option("-r", "--run", action="store_true",
-        help="start process supervisor for this box")
-    parser.add_option("-k", "--kill", action="store_true",
-        help="kill process supervisor for this box")
-    parser.add_option("-q", "--query", action="store_true",
-        help="query application's state")
-    parser.add_option("-i", "--install_ve", action="store_true",
-        help="install a virtualenv for the runtime to use")
-    parser.add_option("-s", "--shell", action="store_true",
-        help="run an ipython shell within the virtualenv")
-    parser.add_option("-t", "--tests", action="store_true",
-        help="run tests")
-    parser.add_option("-x", "--xunit", action="store_true",
-        help="run tests with coverage and xunit output for hudson")
-    parser.add_option("-l", "--lint", action="store_true",
-        help="run pylint on project")
-    parser.add_option("-o", "--outfile", action="store",
-        help="save results from a report to a file")
+    parser.add_option("-a", "--app", action="store",  help="application to start (process name)")
+    parser.add_option("-n", "--interactive", action="store_true", help="run in interactive (non-daemon) mode")
+    parser.add_option("-f", "--fab", action="store_true", help="fabric application to start (process name)")
+    parser.add_option("-r", "--run", action="store_true", help="start process supervisor for this box")
+    parser.add_option("-k", "--kill", action="store_true", help="kill process supervisor for this box")
+    parser.add_option("-q", "--query", action="store_true", help="query application's state")
+    parser.add_option("-i", "--install_ve", action="store_true", help="install a virtualenv for the runtime to use")
+    parser.add_option("-s", "--shell", action="store_true", help="run an ipython shell within the virtualenv")
+    parser.add_option("-t", "--tests", action="store_true", help="run tests")
+    parser.add_option("-x", "--xunit", action="store_true", help="run tests with coverage and xunit output for hudson")
+    parser.add_option("-l", "--lint", action="store_true", help="run pylint on project")
+    parser.add_option("-o", "--outfile", action="store", help="save results from a report to a file")
     return parser
 
 
@@ -86,10 +74,10 @@ def install_or_switch_to_virtualenv(options):
 
 def dispatch_options(parser, options, args):
     if options.run:
-        daemonize = True
-        if options.interactive:
-            daemonize = False
+        daemonize = True if options.interactive else False
         start_process(options, daemonize)
+    elif options.fab:
+        start_fabric(options)
     elif options.kill:
         stop_process(options)
     elif options.query:
@@ -106,22 +94,48 @@ def dispatch_options(parser, options, args):
         parser.print_help()
 
 
+def valid_process_name(function):
+    """ Decorator validates if the --app parameter is registered in the process_context
+        :raise #ValueError otherwise """
+    from system.process_context import ProcessContext
+
+    def _wrapper(options, *args, **kwargs):
+        if options.app not in ProcessContext.PROCESS_CONTEXT:
+            msg = 'Aborting: application <%r> defined by --app option is unknown. \n' % options.app
+            sys.stdout.write(msg)
+            raise ValueError(msg)
+        return function(options, *args, **kwargs)
+    return _wrapper
+
+
+@valid_process_name
 def query_configuration(options):
     """ Queries process state """
-    if options.app in process_context.ProcessContext.PROCESS_CONTEXT:
-        process_helper.poll_process(options.app)
-    else:
-        sys.stdout.write('No application was identified, please run ./launch.py --query --app APPLICATION_NAME \n')
-        sys.exit(1)
+    from system import process_helper
+    process_helper.poll_process(options.app)
 
 
+@valid_process_name
+def start_fabric(options):
+    """Start up process in interactive mode as a fabric script """
+    from system.process_context import ProcessContext
+    try:
+        sys.stdout.write('INFO: Starting %s \n' % ProcessContext.get_classname(options.app))
+        parts = ProcessContext.get_classname(options.app).split('.')
+        module = ".".join(parts[:-1])
+        m = __import__( module )
+        # load module holding main function
+        m = getattr(m, parts[-2])
+        m.main(args)
+    except Exception as e:
+        sys.stderr.write('Exception on starting %s : %s \n' % (options.app, str(e)))
+
+
+@valid_process_name
 def start_process(options, daemonize):
     """Start up specific daemon """
     import psutil
-
-    if options.app not in process_context.ProcessContext.PROCESS_CONTEXT:
-        sys.stdout.write('No application was identified, please run ./launch.py --run --app APPLICATION_NAME \n')
-        sys.exit(1)
+    from system import process_helper
 
     try:
         pid = process_helper.get_process_pid(options.app)
@@ -136,12 +150,10 @@ def start_process(options, daemonize):
         sys.stderr.write('Exception on starting %s : %s \n' % (options.app, str(e)))
 
 
+@valid_process_name
 def stop_process(options):
     """Stop specific daemon"""
-
-    if options.app not in process_context.ProcessContext.PROCESS_CONTEXT:
-        sys.stdout.write('No application was identified, please run ./launch.py --kill --app APPLICATION_NAME \n')
-        sys.exit(1)
+    from system import process_helper
 
     try:
         pid = process_helper.get_process_pid(options.app)

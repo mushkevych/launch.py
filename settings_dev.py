@@ -11,14 +11,6 @@ settings = dict(
     mq_vhost='/',
     mq_port=5672,
 
-    rs_ssc_host_list=['127.0.0.1:27017'],
-    rs_system_host_list=['127.0.0.1:27017'],
-
-    export_mongo_db_login = 'bmushkevych',
-
-    construction_hosts=['https://***REST_INTERFACE_URL***'],         # production access
-    construction_login='***REST_INTERFACE_LOGIN***',                           # production access ONLY
-    construction_password='***REST_INTERFACE_PWD***',                        # production access ONLY
     log_directory='/var/log/synergy-data/',
     pid_directory='/var/log/synergy-data/',
     perf_ticker_interval=10,                                            # seconds between performance ticker messages
