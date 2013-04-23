@@ -21,8 +21,8 @@ it features:
 *./launch.py -t
 * run PyLint:   
 *./launch.py -l
-* run fabric app:   
-*./launch.py --fab --app APPLICATION_NAME
+* run Python script with main method:   
+*./launch.py --main --app APPLICATION_NAME
 * run app as a daemon:   
 *./launch.py --run --app APPLICATION_NAME
 
