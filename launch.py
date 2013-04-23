@@ -20,7 +20,7 @@ def init_parser():
     parser = OptionParser()
     parser.add_option("-a", "--app", action="store",  help="application to start (process name)")
     parser.add_option("-n", "--interactive", action="store_true", help="run in interactive (non-daemon) mode")
-    parser.add_option("-f", "--fab", action="store_true", help="fabric application to start (process name)")
+    parser.add_option("-m", "--main", action="store_true", help="Python script with main function to start")
     parser.add_option("-r", "--run", action="store_true", help="start process supervisor for this box")
     parser.add_option("-k", "--kill", action="store_true", help="kill process supervisor for this box")
     parser.add_option("-q", "--query", action="store_true", help="query application's state")
@@ -76,8 +76,8 @@ def dispatch_options(parser, options, args):
     if options.run:
         daemonize = True if options.interactive else False
         start_process(options, daemonize)
-    elif options.fab:
-        start_fabric(options)
+    elif options.main:
+        start_script(options)
     elif options.kill:
         stop_process(options)
     elif options.query:
@@ -116,7 +116,7 @@ def query_configuration(options):
 
 
 @valid_process_name
-def start_fabric(options):
+def start_script(options):
     """Start up process in interactive mode as a fabric script """
     from system.process_context import ProcessContext
     try:
