@@ -10,7 +10,7 @@ it features:
 * django-style configuration management tool - settings.py
 * single interface to install, run, test and analyze the project codebase
 * "ironclad" support of virtual environment 
-* roto logging, pid file tracking 
+* roto logging, pid file tracking
 * few other convenient tools
 
 ## usage: ##

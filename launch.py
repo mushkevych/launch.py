@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+# launch.py framework is available at github: https://github.com/mushkevych/launch.py
 import shutil
 import sys
 import subprocess
-import virtualenv
 
 from optparse import OptionParser
 from os import path
@@ -12,15 +13,21 @@ from os import path
 PROCESS_STARTER = 'process_starter.py'
 PROJECT_ROOT = path.abspath(path.dirname(__file__))
 
-VE_SCRIPT = path.join(PROJECT_ROOT, 'scripts', 'install_virtualenv')
+# script is run to install virtual environment library into the global interpreter
+VE_GLOBAL_SCRIPT = path.join(PROJECT_ROOT, 'scripts', 'install_ve_globally.sh')
+
+# script creates virtual environment for the project
+VE_SCRIPT = path.join(PROJECT_ROOT, 'scripts', 'install_virtualenv.sh')
 VE_ROOT = path.join(PROJECT_ROOT, '.ve')
+
 
 def init_parser():
     """Setup our command line options"""
     parser = OptionParser()
-    parser.add_option("-a", "--app", action="store",  help="application to start (process name)")
+    parser.add_option("-a", "--app", action="store", help="application to start (process name)")
     parser.add_option("-n", "--interactive", action="store_true", help="run in interactive (non-daemon) mode")
-    parser.add_option("-m", "--main", action="store_true", help="Python script with main function to start")
+    parser.add_option("-m", "--main", action="store_true",
+                      help="starts module with main(*args) function in it (identified by process name from ProcessContext)")
     parser.add_option("-r", "--run", action="store_true", help="start process supervisor for this box")
     parser.add_option("-k", "--kill", action="store_true", help="kill process supervisor for this box")
     parser.add_option("-q", "--query", action="store_true", help="query application's state")
@@ -43,16 +50,31 @@ def get_python():
 
 
 def go_to_ve():
-    """Rerun this script within the virtualenv with same args"""
+    """Rerun this script within the virtualenv with same args
+    Note: parent process will wait for created subprocess to complete"""
+    # two options are possible
     if not path.abspath(sys.prefix) == VE_ROOT:
+        # Option A: we are in the parental process that was called from command line like
+        # $> ./launch.py --main -app NAME
+        # in this case sys.prefix points to Global Interpreter
         python = get_python()
         retcode = subprocess.call([python, __file__] + sys.argv[1:])
         sys.exit(retcode)
+    else:
+        # Option B: we have already followed Option A and instantiated Virtual Environment command
+        # This mean that sys.prefix points to Virtual Environment
+        pass
 
 
 def install_environment(root):
     """Install our virtual environment; removing the old one if it exists"""
-    print 'Installing virtualenv into %s' % root
+    sys.stdout.write('Installing virtualenv into %s' % root)
+    try:
+        import virtualenv
+    except ImportError:
+        sys.stdout.write('Installing virtualenv into global interpreter')
+        subprocess.call([VE_GLOBAL_SCRIPT, PROJECT_ROOT])
+
     if path.exists(root):
         shutil.rmtree(root)
     virtualenv.logger = virtualenv.Logger(consumers=[])
@@ -105,6 +127,7 @@ def valid_process_name(function):
             sys.stdout.write(msg)
             raise ValueError(msg)
         return function(options, *args, **kwargs)
+
     return _wrapper
 
 
@@ -112,18 +135,20 @@ def valid_process_name(function):
 def query_configuration(options):
     """ Queries process state """
     from system import process_helper
+
     process_helper.poll_process(options.app)
 
 
 @valid_process_name
 def start_script(options):
-    """Start up process in interactive mode as a fabric script """
+    """Start up process in interactive mode as a script with main function in it"""
     from system.process_context import ProcessContext
+
     try:
         sys.stdout.write('INFO: Starting %s \n' % ProcessContext.get_classname(options.app))
         parts = ProcessContext.get_classname(options.app).split('.')
         module = ".".join(parts[:-1])
-        m = __import__( module )
+        m = __import__(module)
         # load module holding main function
         m = getattr(m, parts[-2])
         m.main(args)
@@ -189,7 +214,7 @@ def run_lint(options):
 
     config = "--rcfile=" + path.join(PROJECT_ROOT, 'pylint.rc')
     lint.Run([config] + modules,
-        reporter=ParseableTextReporter(output=output), exit=False)
+             reporter=ParseableTextReporter(output=output), exit=False)
 
 
 def load_all_tests():
@@ -209,7 +234,7 @@ def run_tests(options):
     argv = [sys.argv[0]] + args
     try:
         unittest.main(module=None, defaultTest='__main__.load_all_tests',
-            argv=argv)
+                      argv=argv)
     except SystemExit, e:
         if e.code == 0:
             logging.info('PASS')
