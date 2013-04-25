@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# launch.py framework is available at github: https://github.com/mushkevych/launch.py
+# framework is available at github: https://github.com/mushkevych/launch.py
 import shutil
 import sys
 import subprocess
@@ -68,12 +68,13 @@ def go_to_ve():
 
 def install_environment(root):
     """Install our virtual environment; removing the old one if it exists"""
-    sys.stdout.write('Installing virtualenv into %s' % root)
+    sys.stdout.write('Installing virtualenv into %s \n' % root)
     try:
         import virtualenv
     except ImportError:
-        sys.stdout.write('Installing virtualenv into global interpreter')
+        sys.stdout.write('Installing virtualenv into global interpreter \n')
         subprocess.call([VE_GLOBAL_SCRIPT, PROJECT_ROOT])
+        import virtualenv
 
     if path.exists(root):
         shutil.rmtree(root)
@@ -142,16 +143,16 @@ def query_configuration(options):
 @valid_process_name
 def start_script(options):
     """Start up process in interactive mode as a script with main function in it"""
-    from system.process_context import ProcessContext
+    from system import process_helper
 
     try:
-        sys.stdout.write('INFO: Starting %s \n' % ProcessContext.get_classname(options.app))
-        parts = ProcessContext.get_classname(options.app).split('.')
-        module = ".".join(parts[:-1])
-        m = __import__(module)
-        # load module holding main function
-        m = getattr(m, parts[-2])
-        m.main(args)
+        # mandatory parameters are requires since we want to start a process from a method
+        # and implementation of process_helper would trigger #start_by_function only if extra parameters are present
+        mandatory_parameters = args
+        if not mandatory_parameters:
+            mandatory_parameters = ['NA']
+
+        process_helper.start_process(options.app, mandatory_parameters)
     except Exception as e:
         sys.stderr.write('Exception on starting %s : %s \n' % (options.app, str(e)))
 

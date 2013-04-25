@@ -16,11 +16,13 @@ TYPE_GARBAGE_COLLECTOR = 'type_gc'
 PROCESS_GC = 'GarbageCollectorWorker'
 PROCESS_SITE_HOURLY = 'SiteHourlyAggregator'
 PROCESS_ALERT_DAILY = 'AlertDailyWorker'
+PROCESS_SCRIPT_EXAMPLE = 'ScriptExampleWorker'
 
 _TOKEN_SCHEDULER = 'scheduler'
 _TOKEN_GC = 'gc'
 _TOKEN_SITE = 'site'
 _TOKEN_ALERT = 'alert'
+_TOKEN_EXAMPLE = 'example'
 
 _ROUTING_PREFIX = 'routing_'
 _QUEUE_PREFIX = 'queue_'
@@ -119,7 +121,7 @@ class ProcessContext:
             time_qualifier=QUALIFIER_HOURLY,
             exchange=EXCHANGE_VERTICAL,
             type=TYPE_VERTICAL_AGGREGATOR,
-            source_collection= 'single_session_collection'),
+            source_collection='single_session_collection'),
         PROCESS_GC: _create_context_entry(
             process_name=PROCESS_GC,
             classname='workers.garbage_collector_worker.GarbageCollectorWorker',
@@ -129,7 +131,12 @@ class ProcessContext:
             type=TYPE_GARBAGE_COLLECTOR,
             source_collection='units_of_work_collection',
             target_collection='units_of_work_collection'),
-
+        PROCESS_SCRIPT_EXAMPLE: _create_context_entry(
+            process_name=PROCESS_SCRIPT_EXAMPLE,
+            classname='workers.example_script_worker.main',
+            token=_TOKEN_EXAMPLE,
+            time_qualifier=QUALIFIER_REAL_TIME,
+            exchange=EXCHANGE_UTILS),
         PROCESS_ALERT_DAILY: _create_context_entry(
             process_name=PROCESS_ALERT_DAILY,
             classname='workers.hadoop_aggregator_driver.HadoopAggregatorDriver',
