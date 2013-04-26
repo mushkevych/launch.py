@@ -97,8 +97,7 @@ def install_or_switch_to_virtualenv(options):
 
 def dispatch_options(parser, options, args):
     if options.run:
-        daemonize = True if options.interactive else False
-        start_process(options, daemonize)
+        start_process(options)
     elif options.main:
         start_script(options)
     elif options.kill:
@@ -143,6 +142,7 @@ def query_configuration(options):
 @valid_process_name
 def start_script(options):
     """Start up process in interactive mode as a script with main function in it"""
+    import process_starter
     from system import process_helper
 
     try:
@@ -152,15 +152,20 @@ def start_script(options):
         if not mandatory_parameters:
             mandatory_parameters = ['NA']
 
-        process_helper.start_process(options.app, mandatory_parameters)
+        if not options.interactive:
+            # this block triggers if the options.interactive is not defined or is False
+            process_helper.start_process(options.app, mandatory_parameters)
+        else:
+            process_starter.start_by_function(options.app, mandatory_parameters)
     except Exception as e:
         sys.stderr.write('Exception on starting %s : %s \n' % (options.app, str(e)))
 
 
 @valid_process_name
-def start_process(options, daemonize):
+def start_process(options):
     """Start up specific daemon """
     import psutil
+    import process_starter
     from system import process_helper
 
     try:
@@ -171,7 +176,11 @@ def start_process(options, daemonize):
                 sys.stderr.write(message)
                 sys.exit(1)
 
-        process_helper.start_process(options.app)
+        if not options.interactive:
+            # this block triggers if the options.interactive is not defined or is False
+            process_helper.start_process(options.app)
+        else:
+            process_starter.start_by_class(options.app)
     except Exception as e:
         sys.stderr.write('Exception on starting %s : %s \n' % (options.app, str(e)))
 
