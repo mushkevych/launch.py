@@ -53,3 +53,5 @@ Class launcher: https://github.com/mushkevych/launch.py/wiki/launcher.class
 
 Logger: https://github.com/mushkevych/launch.py/wiki/logger  
 
+Configuration: https://github.com/mushkevych/launch.py/wiki/settings.py
+
