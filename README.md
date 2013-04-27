@@ -49,11 +49,13 @@ BSD license. Refer to LICENSE for details.
 
 1. register it in **system.process_context.ProcessContext**:
 
-    'your_script_app_name': _create_context_entry(
-            process_name='your_script_app_name',
-            classname='workers.YOUR_SCRIPT.main',
-            token='your_token',                     # this is used for logging
-            time_qualifier=QUALIFIER_REAL_TIME,     # just use this for now 
-            exchange=EXCHANGE_UTILS),               # just use this for now     
+
+    'your_script_app_name': _create_context_entry(  
+            process_name='your_script_app_name',  
+            classname='workers.YOUR_SCRIPT.main',  
+            token='your_token',                     # this is used for logging  
+            time_qualifier=QUALIFIER_REAL_TIME,     # just use this for now  
+            exchange=EXCHANGE_UTILS),               # just use this for now  
+
 
 2. start it as specified in **usage** section
