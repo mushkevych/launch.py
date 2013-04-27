@@ -4,6 +4,7 @@
 # framework is available at github: https://github.com/mushkevych/launch.py
 import shutil
 import sys
+import traceback
 import subprocess
 
 from optparse import OptionParser
@@ -159,6 +160,7 @@ def start_script(options):
             process_starter.start_by_function(options.app, mandatory_parameters)
     except Exception as e:
         sys.stderr.write('Exception on starting %s : %s \n' % (options.app, str(e)))
+        traceback.print_exc(file=sys.stderr)
 
 
 @valid_process_name
@@ -183,6 +185,7 @@ def start_process(options):
             process_starter.start_by_class(options.app)
     except Exception as e:
         sys.stderr.write('Exception on starting %s : %s \n' % (options.app, str(e)))
+        traceback.print_exc(file=sys.stderr)
 
 
 @valid_process_name
@@ -200,6 +203,7 @@ def stop_process(options):
         process_helper.kill_process(options.app)
     except Exception as e:
         sys.stderr.write('Exception on killing %s : %s \n' % (options.app, str(e)))
+        traceback.print_exc(file=sys.stderr)
 
 
 def run_shell(options):

@@ -34,9 +34,8 @@ def start_by_function(process_name, *args):
     """
     sys.stdout.write('INFO: Starting module\'s %r main function with parameters %r \n'
                      % (ProcessContext.get_classname(process_name), args))
-    klass = get_class(ProcessContext.get_classname(process_name))
-    instance = klass(process_name)
-    instance.main(*args)
+    main_function = get_class(ProcessContext.get_classname(process_name))
+    main_function(*args)
 
 
 if __name__ == "__main__":
