@@ -47,13 +47,6 @@ BSD license. Refer to LICENSE for details.
 
 ## how-to: ##
 
-Step 1. register your application in **system.process_context.ProcessContext**:
+Script launcher: https://github.com/mushkevych/launch.py/wiki/launcher.script  
 
-    'your_script_app_name': _create_context_entry(  
-            process_name='your_script_app_name',  
-            classname='workers.YOUR_SCRIPT.main',  
-            token='your_token',                     # this is used for logging  
-            time_qualifier=QUALIFIER_REAL_TIME,     # just use this for now  
-            exchange=EXCHANGE_UTILS),               # just use this for now  
-
-Step 2. start it as specified in **usage** section
+Class launcher: https://github.com/mushkevych/launch.py/wiki/launcher.class  
