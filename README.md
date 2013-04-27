@@ -16,7 +16,7 @@ it features:
 ## usage: ##
 
 * install virtual environment:  
-./launch.py -i*
+./launch.py -i
 * run test:   
 ./launch.py -t
 * run PyLint:   
