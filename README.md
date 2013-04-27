@@ -47,8 +47,7 @@ BSD license. Refer to LICENSE for details.
 
 ## how-to: ##
 
-1. register it in **system.process_context.ProcessContext**:
-
+Step 1. register your application in **system.process_context.ProcessContext**:
 
     'your_script_app_name': _create_context_entry(  
             process_name='your_script_app_name',  
@@ -57,5 +56,4 @@ BSD license. Refer to LICENSE for details.
             time_qualifier=QUALIFIER_REAL_TIME,     # just use this for now  
             exchange=EXCHANGE_UTILS),               # just use this for now  
 
-
-2. start it as specified in **usage** section
+Step 2. start it as specified in **usage** section
