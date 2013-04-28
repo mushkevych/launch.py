@@ -55,3 +55,6 @@ Logger: https://github.com/mushkevych/launch.py/wiki/logger
 
 Configuration: https://github.com/mushkevych/launch.py/wiki/settings.py
 
+PyLint Integration: https://github.com/mushkevych/launch.py/wiki/PyLint-integration
+
+Unit Test Integration: https://github.com/mushkevych/launch.py/wiki/UnitTest-Integration
