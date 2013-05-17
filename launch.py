@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# framework is available at github: https://github.com/mushkevych/launch.py 
 
-# framework is available at github: https://github.com/mushkevych/launch.py
+""" 
+    @author Bohdan Mushkevych
+    @author Shawn MacIntyre
+"""
 import shutil
 import sys
 import traceback
