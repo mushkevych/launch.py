@@ -8,16 +8,6 @@ settings = dict(
     log_directory='/mnt/log/synergy-data/', 
     pid_directory='/mnt/log/synergy-data/',
 
-    mq_insist=False,
-    mq_queue='default_queue',
-    mq_routing_key='default_routing_key',
-    mq_exchange='default_exchange',
-    mq_durable=True,
-    mq_exclusive=False,
-    mq_auto_delete=False,
-    mq_delivery_mode=2,
-    mq_no_ack=False,
-
     perf_ticker_interval=30,                        # seconds between performance ticker messages
     debug=False,                                    # if True - logger is given additional "console" adapter
     under_test=False

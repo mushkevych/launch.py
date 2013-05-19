@@ -8,22 +8,13 @@ import os
 from system.data_logging import Logger
 from settings import settings
 
-TYPE_ALERT = 'type_alert'
-TYPE_HORIZONTAL_AGGREGATOR = 'type_horizontal'
-TYPE_VERTICAL_AGGREGATOR = 'type_vertical'
-TYPE_GARBAGE_COLLECTOR = 'type_gc'
-
-PROCESS_GC = 'GarbageCollectorWorker'
-PROCESS_SITE_HOURLY = 'SiteHourlyAggregator'
-PROCESS_ALERT_DAILY = 'AlertDailyWorker'
+# User fields
+PROCESS_CLASS_EXAMPLE = 'AbstractClassWorker'
 PROCESS_SCRIPT_EXAMPLE = 'ScriptExampleWorker'
+_TOKEN_CLASS_EXAMPLE = 'class_example'
+_TOKEN_SCRIPT_EXAMPLE = 'script_example'
 
-_TOKEN_SCHEDULER = 'scheduler'
-_TOKEN_GC = 'gc'
-_TOKEN_SITE = 'site'
-_TOKEN_ALERT = 'alert'
-_TOKEN_EXAMPLE = 'example'
-
+# Framework fields
 _ROUTING_PREFIX = 'routing_'
 _QUEUE_PREFIX = 'queue_'
 _VOID = 'VOID'
@@ -106,44 +97,23 @@ class ProcessContext:
     QUALIFIER_YEARLY = '_yearly'
 
     EXCHANGE_RAW_DATA = 'exchange_raw_data'
-    EXCHANGE_VERTICAL = 'exchange_vertical'
-    EXCHANGE_HORIZONTAL = 'exchange_horizontal'
-    EXCHANGE_ALERT = 'exchange_alert'
     EXCHANGE_UTILS = 'exchange_utils'
 
     logger_pool = dict()
 
     PROCESS_CONTEXT = {
-        PROCESS_SITE_HOURLY: _create_context_entry(
-            process_name=PROCESS_SITE_HOURLY,
-            classname='workers.site_hourly_aggregator.SiteHourlyAggregator',
-            token=_TOKEN_SITE,
-            time_qualifier=QUALIFIER_HOURLY,
-            exchange=EXCHANGE_VERTICAL,
-            type=TYPE_VERTICAL_AGGREGATOR,
-            source_collection='single_session_collection'),
-        PROCESS_GC: _create_context_entry(
-            process_name=PROCESS_GC,
-            classname='workers.garbage_collector_worker.GarbageCollectorWorker',
-            token=_TOKEN_GC,
-            time_qualifier=QUALIFIER_BY_SCHEDULE,
-            exchange=EXCHANGE_UTILS,
-            type=TYPE_GARBAGE_COLLECTOR,
-            source_collection='units_of_work_collection',
-            target_collection='units_of_work_collection'),
         PROCESS_SCRIPT_EXAMPLE: _create_context_entry(
             process_name=PROCESS_SCRIPT_EXAMPLE,
             classname='workers.example_script_worker.main',
-            token=_TOKEN_EXAMPLE,
+            token=_TOKEN_SCRIPT_EXAMPLE,
             time_qualifier=QUALIFIER_REAL_TIME,
             exchange=EXCHANGE_UTILS),
-        PROCESS_ALERT_DAILY: _create_context_entry(
-            process_name=PROCESS_ALERT_DAILY,
-            classname='workers.hadoop_aggregator_driver.HadoopAggregatorDriver',
-            token=_TOKEN_ALERT,
+        PROCESS_CLASS_EXAMPLE: _create_context_entry(
+            process_name=PROCESS_CLASS_EXAMPLE,
+            classname='workers.abstract_worker.AbstractWorker',
+            token=_TOKEN_CLASS_EXAMPLE,
             time_qualifier=QUALIFIER_DAILY,
-            exchange=EXCHANGE_ALERT,
-            type=TYPE_HORIZONTAL_AGGREGATOR),
+            exchange=EXCHANGE_UTILS),
 
         'TestAggregator': _create_context_entry(
             process_name='TestAggregator',
