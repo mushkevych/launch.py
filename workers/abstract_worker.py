@@ -41,8 +41,8 @@ class AbstractWorker(SynergyProcess):
     # ********************** thread-related methods ****************************
     def run(self):
         """ abstract method to be overridden in children classes """
-        pass
+        self.logger.info('Thread started')
 
-    def start(self):
-        self.main_thread = Thread()
+    def start(self, *args):
+        self.main_thread = Thread(target=self.run)
         self.main_thread.start()

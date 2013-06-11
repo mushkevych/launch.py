@@ -29,12 +29,10 @@ VE_ROOT = path.join(PROJECT_ROOT, '.ve')
 def init_parser():
     """Setup our command line options"""
     parser = OptionParser()
-    parser.add_option("-a", "--app", action="store", help="application to start (process name)")
     parser.add_option("-n", "--interactive", action="store_true", help="run in interactive (non-daemon) mode")
-    parser.add_option("-m", "--main", action="store_true",
-                      help="starts module with main(*args) function in it (identified by process name from ProcessContext)")
-    parser.add_option("-r", "--run", action="store_true", help="start process supervisor for this box")
-    parser.add_option("-k", "--kill", action="store_true", help="kill process supervisor for this box")
+    parser.add_option("-r", "--run", action="store_true", help="starts process identified by -app parameter")
+    parser.add_option("-k", "--kill", action="store_true", help="kill process identified by -app parameter")
+    parser.add_option("-a", "--app", action="store", help="application to start (process name)")
     parser.add_option("-q", "--query", action="store_true", help="query application's state")
     parser.add_option("-i", "--install_ve", action="store_true", help="install a virtualenv for the runtime to use")
     parser.add_option("-s", "--shell", action="store_true", help="run an ipython shell within the virtualenv")
@@ -85,8 +83,8 @@ def install_environment(root):
         shutil.rmtree(root)
     virtualenv.logger = virtualenv.Logger(consumers=[])
     virtualenv.create_environment(root, site_packages=False)
-    retcode = subprocess.call([VE_SCRIPT, PROJECT_ROOT, root])
-    sys.exit(retcode)
+    ret_code = subprocess.call([VE_SCRIPT, PROJECT_ROOT, root])
+    sys.exit(ret_code)
 
 
 def install_or_switch_to_virtualenv(options):
@@ -102,9 +100,7 @@ def install_or_switch_to_virtualenv(options):
 
 def dispatch_options(parser, options, args):
     if options.run:
-        start_process(options)
-    elif options.main:
-        start_script(options)
+        start_process(options, args)
     elif options.kill:
         stop_process(options)
     elif options.query:
@@ -145,30 +141,7 @@ def query_configuration(options):
 
 
 @valid_process_name
-def start_script(options):
-    """Start up process in interactive mode as a script with main function in it"""
-    import process_starter
-    from system import process_helper
-
-    try:
-        # mandatory parameters are requires since we want to start a process from a method
-        # and implementation of process_helper would trigger #start_by_function only if extra parameters are present
-        mandatory_parameters = args
-        if not mandatory_parameters:
-            mandatory_parameters = ['NA']
-
-        if not options.interactive:
-            # this block triggers if the options.interactive is not defined or is False
-            process_helper.start_process(options.app, mandatory_parameters)
-        else:
-            process_starter.start_by_function(options.app, mandatory_parameters)
-    except Exception as e:
-        sys.stderr.write('Exception on starting %s : %s \n' % (options.app, str(e)))
-        traceback.print_exc(file=sys.stderr)
-
-
-@valid_process_name
-def start_process(options):
+def start_process(options, args):
     """Start up specific daemon """
     import psutil
     import process_starter
@@ -184,9 +157,9 @@ def start_process(options):
 
         if not options.interactive:
             # this block triggers if the options.interactive is not defined or is False
-            process_helper.start_process(options.app)
+            process_helper.start_process(options.app, args)
         else:
-            process_starter.start_by_class(options.app)
+            process_starter.start_by_process_name(options.app, args)
     except Exception as e:
         sys.stderr.write('Exception on starting %s : %s \n' % (options.app, str(e)))
         traceback.print_exc(file=sys.stderr)
