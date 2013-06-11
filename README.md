@@ -7,6 +7,7 @@ Python scripts to setup your virtual env + few convenient tools like configurati
 
 launch.py is almost a framework... tiny, convenient and very useful
 it features:
+* daemonizer - all you need to run your code as a daemon is the full path of the starter method/function (such as workers.example_script_worker.main)
 * django-style configuration management tool - settings.py
 * single interface to install, run, test and analyze the project codebase
 * "ironclad" support of virtual environment 
@@ -21,13 +22,9 @@ it features:
 ./launch.py -t
 * run PyLint:   
 ./launch.py -l
-* start separate Python process by running script's main(*args) function:  
-./launch.py --main --app APPLICATION_NAME
-* call script's main(*args) function within the same process, so you can see the output in the terminal:  
-./launch.py --main --app APPLICATION_NAME --interactive
-* start separate Python process by creating an instance of a class and calling its start() method:  
+* start separate Python process by running either script or class' starter method/function:  
 ./launch.py --run --app APPLICATION_NAME
-* create an instance of a class and call its start() method within the same process, so you can see the output in the terminal:  
+* run the starter script/method within the same process, so you can see the output in the terminal:  
 ./launch.py --run --app APPLICATION_NAME --interactive
 
 ## license: ##
