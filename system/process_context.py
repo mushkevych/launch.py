@@ -15,40 +15,21 @@ _TOKEN_CLASS_EXAMPLE = 'class_example'
 _TOKEN_SCRIPT_EXAMPLE = 'script_example'
 
 # Framework fields
-_ROUTING_PREFIX = 'routing_'
-_QUEUE_PREFIX = 'queue_'
-_VOID = 'VOID'
-
 _NAME = 'process_name'
 _LOG_FILENAME = 'log_filename'
 _LOG_TAG = 'log_tag'
 _PID_FILENAME = 'pid_filename'
 _CLASSNAME = 'classname'
-_SOURCE_COLLECTION = 'source_collection'
-_TARGET_COLLECTION = 'target_collection'
-_MQ_QUEUE = 'mq_queue'
-_MQ_EXCHANGE = 'mq_exchange'
-_MQ_ROUTING_KEY = 'mq_routing_key'
 _TIME_QUALIFIER = 'time_qualifier'
-_TYPE = 'type'
+
 
 def _create_context_entry(process_name,
                           classname,
                           token,
                           time_qualifier,
-                          exchange,
-                          queue=None,
-                          routing=None,
-                          type=None,
-                          source_collection=_VOID,
-                          target_collection=_VOID,
                           pid_file=None,
                           log_file=None):
     """ forms process context entry """
-    if queue is None:
-        queue = _QUEUE_PREFIX + token + time_qualifier
-    if routing is None:
-        routing = _ROUTING_PREFIX + token + time_qualifier
     if pid_file is None:
         pid_file = token + time_qualifier + '.pid'
     if log_file is None:
@@ -60,13 +41,7 @@ def _create_context_entry(process_name,
         _CLASSNAME: classname,
         _LOG_FILENAME: settings['log_directory'] + log_file,
         _LOG_TAG: token + time_qualifier,
-        _SOURCE_COLLECTION: source_collection,
-        _TARGET_COLLECTION: target_collection,
-        _MQ_QUEUE: queue,
-        _MQ_EXCHANGE: exchange,
-        _MQ_ROUTING_KEY: routing,
-        _TIME_QUALIFIER: time_qualifier,
-        _TYPE: type
+        _TIME_QUALIFIER: time_qualifier
     }
 
 
@@ -77,17 +52,8 @@ class ProcessContext:
     # log_tag
     # pid_filename
     # full_classname
-    # source_collection
-    # target_collection
-    # mq_queue
-    # mq_exchange
-    # mq_routing_key
     # time_qualifier
-    # type
     # }
-
-    QUEUE_RAW_DATA = 'queue_raw_data'
-    ROUTING_IRRELEVANT = 'routing_irrelevant'
 
     QUALIFIER_REAL_TIME = '_real_time'
     QUALIFIER_BY_SCHEDULE = '_by_schedule'
@@ -96,9 +62,6 @@ class ProcessContext:
     QUALIFIER_MONTHLY = '_monthly'
     QUALIFIER_YEARLY = '_yearly'
 
-    EXCHANGE_RAW_DATA = 'exchange_raw_data'
-    EXCHANGE_UTILS = 'exchange_utils'
-
     logger_pool = dict()
 
     PROCESS_CONTEXT = {
@@ -106,21 +69,18 @@ class ProcessContext:
             process_name=PROCESS_SCRIPT_EXAMPLE,
             classname='workers.example_script_worker.main',
             token=_TOKEN_SCRIPT_EXAMPLE,
-            time_qualifier=QUALIFIER_REAL_TIME,
-            exchange=EXCHANGE_UTILS),
+            time_qualifier=QUALIFIER_REAL_TIME),
         PROCESS_CLASS_EXAMPLE: _create_context_entry(
             process_name=PROCESS_CLASS_EXAMPLE,
             classname='workers.abstract_worker.AbstractWorker.start',
             token=_TOKEN_CLASS_EXAMPLE,
-            time_qualifier=QUALIFIER_DAILY,
-            exchange=EXCHANGE_UTILS),
+            time_qualifier=QUALIFIER_DAILY),
 
         'TestAggregator': _create_context_entry(
             process_name='TestAggregator',
             classname='',
             token='test',
-            time_qualifier='',
-            exchange=''),
+            time_qualifier=''),
     }
 
     @classmethod
@@ -183,39 +143,6 @@ class ProcessContext:
         """ method returns worker/aggregator time scale (like daily or yearly)"""
         return cls.PROCESS_CONTEXT[process_name][_TIME_QUALIFIER]
 
-    @classmethod
-    def get_routing(cls, process_name):
-        """ method returns routing; it is used to segregate traffic within the queue
-        for instance: routing_hourly for hourly reports, while routing_yearly for yearly reports"""
-        return cls.PROCESS_CONTEXT[process_name][_MQ_ROUTING_KEY]
-
-    @classmethod
-    def get_exchange(cls, process_name):
-        """ method returns exchange for this classname.
-        Exchange is a component that sits between queue and the publisher"""
-        return cls.PROCESS_CONTEXT[process_name][_MQ_EXCHANGE]
-
-    @classmethod
-    def get_queue(cls, process_name):
-        """ method returns queue that is applicable for the worker/aggregator, specified by classname"""
-        return cls.PROCESS_CONTEXT[process_name][_MQ_QUEUE]
-
-    @classmethod
-    def get_target_collection(cls, process_name):
-        """ method returns target collection - the one where aggregated data will be placed in """
-        return cls.PROCESS_CONTEXT[process_name][_TARGET_COLLECTION]
-
-    @classmethod
-    def get_source_collection(cls, process_name):
-        """ method returns source collection - the one where data is taken from for analysis"""
-        return cls.PROCESS_CONTEXT[process_name][_SOURCE_COLLECTION]
-
-    @classmethod
-    def get_type(cls, process_name):
-        """ method returns process type
-        Supported types are listed in process_context starting with TYPE_ prefix and are enumerated in
-        scheduler.start() method"""
-        return cls.PROCESS_CONTEXT[process_name][_TYPE]
 
 if __name__ == '__main__':
     pass

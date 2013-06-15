@@ -10,6 +10,7 @@ from rest_client.restful_lib import Connection
 
 from settings import settings
 
+
 class ConnectionPool(object):
     def __init__(self, logger, login, pwd, hosts):
         self.logger = logger
@@ -22,7 +23,7 @@ class ConnectionPool(object):
                 connection.h.disable_ssl_certificate_validation = True
                 self.connection_pool.append(connection)
             except Exception as e:
-                self.logger.error('Exception occurred while connecting to %s:%s ' % (host, str(e)), exc_info = True)
+                self.logger.error('Exception occurred while connecting to %s:%s ' % (host, str(e)), exc_info=True)
                         
     def get_connection(self):
         pool_len = len(self.connection_pool)
@@ -54,7 +55,7 @@ class RestClient(object):
         conn = self.connection_pool.get_connection()
         resp = conn.request_post(request,
                                  body=json.dumps(body_as_dict),
-                                 headers={'content-type':'application/json', 'accept':'application/json'})
+                                 headers={'content-type': 'application/json', 'accept': 'application/json'})
         status = resp[u'headers']['status']
         # check that we either got a successful response (200) or a previously retrieved, but still valid response (304)
         if status == '200' or status == '304':

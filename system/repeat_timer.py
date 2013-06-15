@@ -9,6 +9,7 @@ from datetime import datetime
 
 import threading
 
+
 class RepeatTimer(threading.Thread):
     def __init__(self, interval, callback, args=[], kwargs={}):
         threading.Thread.__init__(self)
@@ -28,9 +29,9 @@ class RepeatTimer(threading.Thread):
         while self.event.is_set():
             self.activation_dt = datetime.utcnow()
             self.__timer = threading.Timer(self.interval_new,
-                                          self.callback,
-                                          self.args,
-                                          self.kwargs)
+                                           self.callback,
+                                           self.args,
+                                           self.kwargs)
             self.interval_current = self.interval_new
             self.__timer.start()
             self.__timer.join()
