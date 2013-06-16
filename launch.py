@@ -37,8 +37,9 @@ def init_parser():
     parser.add_option("-i", "--install_ve", action="store_true", help="install a virtualenv for the runtime to use")
     parser.add_option("-s", "--shell", action="store_true", help="run an ipython shell within the virtualenv")
     parser.add_option("-t", "--tests", action="store_true", help="run tests")
-    parser.add_option("-x", "--xunit", action="store_true", help="run tests with coverage and xunit output for hudson")
-    parser.add_option("-l", "--lint", action="store_true", help="run pylint on project")
+    parser.add_option("-x", "--xunit", action="store_true", help="run tests with coverage and xunit output for Jenkins")
+    parser.add_option("-z", "--analyze", action="store_true", help="run pylint on project")
+    parser.add_option("-l", "--list", action="store_true", help="list available applications")
     parser.add_option("-o", "--outfile", action="store", help="save results from a report to a file")
     return parser
 
@@ -107,8 +108,10 @@ def dispatch_options(parser, options, args):
         query_configuration(options)
     elif options.shell:
         run_shell(options)
-    elif options.lint:
+    elif options.analyze:
         run_lint(options)
+    elif options.list:
+        list_processes(options)
     elif options.tests:
         run_tests(options)
     elif options.xunit:
@@ -206,6 +209,12 @@ def run_lint(options):
     config = "--rcfile=" + path.join(PROJECT_ROOT, 'pylint.rc')
     lint.Run([config] + modules,
              reporter=ParseableTextReporter(output=output), exit=False)
+
+
+def list_processes(options):
+    from system.process_context import ProcessContext
+    msg = 'List of registered applications: %r \n' % ProcessContext.PROCESS_CONTEXT.keys()
+    sys.stdout.write(msg)
 
 
 def load_all_tests():
