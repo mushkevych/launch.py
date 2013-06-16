@@ -21,8 +21,8 @@ it features:
 * run test:   
 ./launch.py -t
 * run PyLint:   
-./launch.py -l
-* start separate Python process by running either script or class' starter method/function:  
+./launch.py -z
+* start separate Python process by running either script's or class' starter method/function:  
 ./launch.py --run --app APPLICATION_NAME
 * run the starter script/method within the same process, so you can see the output in the terminal:  
 ./launch.py --run --app APPLICATION_NAME --interactive
