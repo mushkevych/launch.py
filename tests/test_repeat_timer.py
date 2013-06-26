@@ -1,6 +1,4 @@
 """
-Created on 2012-03-15
-
 @author: Bohdan Mushkevych
 """
 
@@ -9,11 +7,19 @@ from datetime import datetime
 import time
 from system import repeat_timer
 
+
 class TestRepeatTimer(unittest.TestCase):
     INTERVAL = 3
 
-    def method_yes(self, start_datetime, seconds):
-        print 'YES executed with parameters %s %s' % (str(start_datetime), seconds)
+    def make_method_yes(self, initial_multiplication=1):
+        # the only way to implement nonlocal closure variables in Python 2.X
+        cycle = {'index': initial_multiplication}
+
+        def method_yes(start_datetime, seconds):
+            delta = datetime.utcnow() - start_datetime
+            assert delta.seconds == cycle['index'] * seconds
+            cycle['index'] += 1
+        return method_yes
 
     def method_no(self, start_datetime, seconds):
         raise AssertionError('Assertion failed as NO was executed with parameters %s %s' % (str(start_datetime), seconds))
@@ -31,8 +37,7 @@ class TestRepeatTimer(unittest.TestCase):
         self.obj.start()
         time.sleep(TestRepeatTimer.INTERVAL)
         self.obj.cancel()
-        assert True
-        
+
     def test_cancellation(self):
         self.obj = repeat_timer.RepeatTimer(TestRepeatTimer.INTERVAL,
                                             self.method_no,
@@ -44,23 +49,21 @@ class TestRepeatTimer(unittest.TestCase):
 
     def test_trigger(self):
         self.obj = repeat_timer.RepeatTimer(TestRepeatTimer.INTERVAL,
-                                            self.method_yes,
+                                            self.make_method_yes(),
                                             args=[datetime.utcnow(), 0])
         self.obj.start()
         self.obj.trigger()
         self.obj.cancel()
         time.sleep(TestRepeatTimer.INTERVAL)
-        assert True
 
     def test_trigger_with_continuation(self):
         self.obj = repeat_timer.RepeatTimer(TestRepeatTimer.INTERVAL - 1,
-            self.method_yes,
-            args=[datetime.utcnow(), 0])
+                                            self.make_method_yes(initial_multiplication=0),
+                                            args=[datetime.utcnow(), TestRepeatTimer.INTERVAL - 1])
         self.obj.start()
         self.obj.trigger()
         time.sleep(TestRepeatTimer.INTERVAL)
         self.obj.cancel()
-        assert True
 
 if __name__ == '__main__':
     unittest.main()
