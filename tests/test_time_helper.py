@@ -1,50 +1,46 @@
-"""
-Created on 2011-03-17
-
-@author: Bohdan Mushkevych
-"""
+__author__ = 'Bohdan Mushkevych'
 
 import unittest
 from datetime import datetime
 from system import time_helper
-from system import process_context 
+from system.process_context import ProcessContext
+
 
 class TestTimeHelper(unittest.TestCase):
-    
     def test_raw_to_session(self):
         timestamp = 1304618357.4482391
         expected_output = '20110505175917'
         assert time_helper.raw_to_session(timestamp) == expected_output
-        
+
     def test_session_to_hour(self):
         timestamp = '20110101161633'
         expected_output = '2011010116'
         assert time_helper.session_to_hour(timestamp) == expected_output
 
     def test_hour_to_day(self):
-        timestamp = '2011010116'
+        timeperiod = '2011010116'
         expected_output = '2011010100'
-        assert time_helper.hour_to_day(timestamp) == expected_output
+        assert time_helper.hour_to_day(timeperiod) == expected_output
 
     def test_day_to_month(self):
-        timestamp = '2011010100'
+        timeperiod = '2011010100'
         expected_output = '2011010000'
-        assert time_helper.day_to_month(timestamp) == expected_output
+        assert time_helper.day_to_month(timeperiod) == expected_output
 
     def test_month_to_year(self):
-        timestamp = '2011010000'
+        timeperiod = '2011010000'
         expected_output = '2011000000'
-        assert time_helper.month_to_year(timestamp) == expected_output
+        assert time_helper.month_to_year(timeperiod) == expected_output
 
-        timestamp = '2011120000'
+        timeperiod = '2011120000'
         expected_output = '2011000000'
-        assert time_helper.month_to_year(timestamp) == expected_output
-    
+        assert time_helper.month_to_year(timeperiod) == expected_output
+
     def test_cast_to_time_qualifier(self):
-        processes = [process_context.ProcessContext.QUALIFIER_HOURLY, process_context.ProcessContext.QUALIFIER_HOURLY,
-                     process_context.ProcessContext.QUALIFIER_DAILY, process_context.ProcessContext.QUALIFIER_DAILY,
-                     process_context.ProcessContext.QUALIFIER_MONTHLY, process_context.ProcessContext.QUALIFIER_MONTHLY,
-                     process_context.ProcessContext.QUALIFIER_YEARLY, process_context.ProcessContext.QUALIFIER_YEARLY]
+        qualifiers = [ProcessContext.QUALIFIER_HOURLY, ProcessContext.QUALIFIER_HOURLY,
+                     ProcessContext.QUALIFIER_DAILY, ProcessContext.QUALIFIER_DAILY,
+                     ProcessContext.QUALIFIER_MONTHLY, ProcessContext.QUALIFIER_MONTHLY,
+                     ProcessContext.QUALIFIER_YEARLY, ProcessContext.QUALIFIER_YEARLY]
         params = ['2010123123', '20101231231232',
                   '2010123123', '2010123100',
                   '2010123100', '2010120000',
@@ -54,69 +50,68 @@ class TestTimeHelper(unittest.TestCase):
                     '2010120000', '2010120000',
                     '2010000000', '2010000000']
         for i in range(8):
-            assert time_helper.cast_to_time_qualifier(processes[i], params[i]) == expected[i]
-    
-    def test_datetime_to_synergy(self):
-        dt = datetime(year = 2010, month = 12, day = 31, hour = 23, minute = 50, second = 15)
+            assert time_helper.cast_to_time_qualifier(qualifiers[i], params[i]) == expected[i]
 
-        processes = [process_context.ProcessContext.QUALIFIER_REAL_TIME,
-                     process_context.ProcessContext.QUALIFIER_HOURLY,
-                     process_context.ProcessContext.QUALIFIER_DAILY,
-                     process_context.ProcessContext.QUALIFIER_MONTHLY,
-                     process_context.ProcessContext.QUALIFIER_YEARLY]
-        
+    def test_datetime_to_synergy(self):
+        dt = datetime(year=2010, month=12, day=31, hour=23, minute=50, second=15)
+
+        qualifiers = [ProcessContext.QUALIFIER_REAL_TIME,
+                      ProcessContext.QUALIFIER_HOURLY,
+                      ProcessContext.QUALIFIER_DAILY,
+                      ProcessContext.QUALIFIER_MONTHLY,
+                      ProcessContext.QUALIFIER_YEARLY]
+
         expected = ['20101231235015',
                     '2010123123',
                     '2010123100',
                     '2010120000',
                     '2010000000']
-        
+
         for i in range(4):
-            assert time_helper.datetime_to_synergy(processes[i], dt) == expected[i]
+            assert time_helper.datetime_to_synergy(qualifiers[i], dt) == expected[i]
 
     def test_synergy_to_datetime(self):
-        processes = [process_context.ProcessContext.QUALIFIER_REAL_TIME,
-                     process_context.ProcessContext.QUALIFIER_HOURLY,
-                     process_context.ProcessContext.QUALIFIER_DAILY,
-                     process_context.ProcessContext.QUALIFIER_MONTHLY,
-                     process_context.ProcessContext.QUALIFIER_YEARLY]
+        qualifiers = [ProcessContext.QUALIFIER_REAL_TIME,
+                      ProcessContext.QUALIFIER_HOURLY,
+                      ProcessContext.QUALIFIER_DAILY,
+                      ProcessContext.QUALIFIER_MONTHLY,
+                      ProcessContext.QUALIFIER_YEARLY]
 
-        expected = [datetime(year = 2010, month = 12, day = 31, hour = 23, minute = 12, second = 34),
-                    datetime(year = 2010, month = 12, day = 31, hour = 23, minute = 00, second = 0),
-                    datetime(year = 2010, month = 12, day = 31, hour = 00, minute = 00, second = 0),
-                    datetime(year = 2010, month = 12, day = 01, hour = 00, minute = 00, second = 0),
-                    datetime(year = 2010, month = 01, day = 01, hour = 00, minute = 00, second = 0),
-        ]
-        params =   ['20101231231234',
-                    '2010123123',
-                    '2010123100',
-                    '2010120000',
-                    '2010000000']
+        expected = [datetime(year=2010, month=12, day=31, hour=23, minute=12, second=34),
+                    datetime(year=2010, month=12, day=31, hour=23, minute=00, second=0),
+                    datetime(year=2010, month=12, day=31, hour=00, minute=00, second=0),
+                    datetime(year=2010, month=12, day=01, hour=00, minute=00, second=0),
+                    datetime(year=2010, month=01, day=01, hour=00, minute=00, second=0)]
+
+        params = ['20101231231234',
+                  '2010123123',
+                  '2010123100',
+                  '2010120000',
+                  '2010000000']
 
         for i in range(5):
-            assert time_helper.synergy_to_datetime(processes[i], params[i]) == expected[i]
-
+            assert time_helper.synergy_to_datetime(qualifiers[i], params[i]) == expected[i]
 
     def test_increment_time(self):
         stamps = ['2011010100', '2011010112', '2011010123']
         expected = ['2011010101', '2011010113', '2011010200']
         for i in range(3):
-            assert time_helper.increment_timeperiod(process_context.ProcessContext.QUALIFIER_HOURLY, stamps[i]) == expected[i]
-        
+            assert time_helper.increment_timeperiod(ProcessContext.QUALIFIER_HOURLY, stamps[i]) == expected[i]
+
         stamps = ['2011010100', '2011013100', '2010123100']
         expected = ['2011010200', '2011020100', '2011010100']
         for i in range(3):
-            assert time_helper.increment_timeperiod(process_context.ProcessContext.QUALIFIER_DAILY, stamps[i]) == expected[i]
-                                                      
+            assert time_helper.increment_timeperiod(ProcessContext.QUALIFIER_DAILY, stamps[i]) == expected[i]
+
         stamps = ['2011010000', '2011120000', '2011100000']
         expected = ['2011020000', '2012010000', '2011110000']
         for i in range(3):
-            assert time_helper.increment_timeperiod(process_context.ProcessContext.QUALIFIER_MONTHLY, stamps[i]) == expected[i]
-        
+            assert time_helper.increment_timeperiod(ProcessContext.QUALIFIER_MONTHLY, stamps[i]) == expected[i]
+
         stamps = ['2011000000', '2012000000', '2099000000']
         expected = ['2012000000', '2013000000', '2100000000']
         for i in range(3):
-            assert time_helper.increment_timeperiod(process_context.ProcessContext.QUALIFIER_YEARLY, stamps[i]) == expected[i]
+            assert time_helper.increment_timeperiod(ProcessContext.QUALIFIER_YEARLY, stamps[i]) == expected[i]
 
     def test_duration_calculation(self):
         timestamp_1 = 1305934600.0
