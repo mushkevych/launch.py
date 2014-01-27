@@ -5,7 +5,7 @@ Python scripts to setup your virtual env + few convenient tools like configurati
 
 ## description: ##
 
-launch.py is almost a framework... tiny, convenient and very useful
+launch.py is almost a framework... tiny, convenient and very useful  
 it features:
 * daemonizer - all you need to run your code as a daemon is the full path of the starter method/function (such as workers.example_script_worker.main)
 * django-style configuration management tool - settings.py
