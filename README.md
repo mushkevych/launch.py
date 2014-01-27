@@ -55,3 +55,7 @@ Configuration: https://github.com/mushkevych/launch.py/wiki/settings.py
 PyLint Integration: https://github.com/mushkevych/launch.py/wiki/PyLint-integration
 
 Unit Test Integration: https://github.com/mushkevych/launch.py/wiki/UnitTest-Integration
+
+Jenkins Integration: https://github.com/mushkevych/launch.py/wiki/Jenkins-Integration
+
+
