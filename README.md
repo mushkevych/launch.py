@@ -29,7 +29,7 @@ it features:
 
 ## license: ##
 
-BSD license. Refer to LICENSE for details.
+Modified BSD License. Refer to LICENSE for details.
 
 ## metafile: ##
 
