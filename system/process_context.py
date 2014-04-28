@@ -9,10 +9,6 @@ from system.data_logging import Logger
 from settings import settings
 
 # User fields
-PROCESS_CLASS_EXAMPLE = 'AbstractClassWorker'
-PROCESS_SCRIPT_EXAMPLE = 'ScriptExampleWorker'
-_TOKEN_CLASS_EXAMPLE = 'class_example'
-_TOKEN_SCRIPT_EXAMPLE = 'script_example'
 
 # Framework fields
 _NAME = 'process_name'
@@ -45,7 +41,7 @@ def _create_context_entry(process_name,
     }
 
 
-class ProcessContext:
+class ProcessContext(object):
     # process_context format: "process_name": {
     # process_name
     # log_filename
@@ -65,22 +61,6 @@ class ProcessContext:
     logger_pool = dict()
 
     PROCESS_CONTEXT = {
-        PROCESS_SCRIPT_EXAMPLE: _create_context_entry(
-            process_name=PROCESS_SCRIPT_EXAMPLE,
-            classname='workers.example_script_worker.main',
-            token=_TOKEN_SCRIPT_EXAMPLE,
-            time_qualifier=QUALIFIER_REAL_TIME),
-        PROCESS_CLASS_EXAMPLE: _create_context_entry(
-            process_name=PROCESS_CLASS_EXAMPLE,
-            classname='workers.abstract_worker.AbstractWorker.start',
-            token=_TOKEN_CLASS_EXAMPLE,
-            time_qualifier=QUALIFIER_DAILY),
-
-        'TestAggregator': _create_context_entry(
-            process_name='TestAggregator',
-            classname='',
-            token='test',
-            time_qualifier=''),
     }
 
     @classmethod

@@ -1,0 +1,11 @@
+/target
+
+.idea
+.ve
+.classpath
+.project
+.settings
+*.iml
+*.pyc
+*.*~
+
