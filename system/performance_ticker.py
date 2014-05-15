@@ -1,6 +1,9 @@
 __author__ = 'Bohdan Mushkevych'
 
-import time, os, psutil
+import time
+import os
+
+import psutil
 
 from system.repeat_timer import RepeatTimer
 from settings import settings
@@ -32,14 +35,60 @@ class FootprintCalculator(object):
         return resp
 
 
+class Tracker(object):
+    def __init__(self, name):
+        self.name = name
+        self.per_24h = 0
+        self.per_tick = 0
+
+    def increment(self, delta=1):
+        self.per_24h += delta
+        self.per_tick += delta
+
+    def reset_tick(self):
+        self.per_tick = 0
+
+    def reset_24h(self):
+        self.per_24h = 0
+
+
+class TrackerPair(object):
+    def __init__(self, name, up_name='Success', down_name='Failure'):
+        self.name = name
+        self.tracker_up = Tracker(down_name)
+        self.tracker_down = Tracker(up_name)
+
+    def increment_up(self):
+        self.tracker_down.increment()
+
+    def increment_down(self):
+        self.tracker_up.increment()
+
+    def reset_tick(self):
+        self.tracker_up.reset_tick()
+        self.tracker_down.reset_tick()
+
+    def reset_24h(self):
+        self.tracker_up.reset_24h()
+        self.tracker_down.reset_24h()
+
+    def to_string(self, tick_interval_seconds, show_header=True):
+        header = self.name + ' : ' + self.tracker_down.name + '/' + self.tracker_up.name + '.' if show_header else ''
+        return header + 'In last {0:d} seconds: {1:d}/{2:d}. In last 24 hours: {3:d}/{4:d}'.format(
+            tick_interval_seconds,
+            self.tracker_down.per_tick,
+            self.tracker_up.per_tick,
+            self.tracker_down.per_24h,
+            self.tracker_up.per_24h)
+
+
 class WorkerPerformanceTicker(object):
     SECONDS_IN_24_HOURS = 86400
     TICKS_BETWEEN_FOOTPRINTS = 10
 
-    def __init__(self, logger):
+    def __init__(self, logger, tracker_up_name='Success', tracker_down_name='Failure'):
         self.logger = logger
-        self.posts_per_24_hours = 0
-        self.posts_per_tick = 0
+        self.tracker = TrackerPair('Processed', up_name=tracker_up_name, down_name=tracker_down_name)
         self.interval = settings['perf_ticker_interval']
         self.mark_24_hours = time.time()
         self.mark_footprint = time.time()
@@ -62,49 +111,28 @@ class WorkerPerformanceTicker(object):
 
     def _run_tick_thread(self):
         self._print_footprint()
-        self.logger.info('Processed: %d in last %d seconds; %d in last 24 hours;'
-                         % (self.posts_per_tick,
-                            self.interval,
-                            self.posts_per_24_hours))
+        self.logger.info(self.tracker.to_string(self.interval))
 
-        self.posts_per_tick = 0
+        self.tracker.reset_tick()
         if time.time() - self.mark_24_hours > self.SECONDS_IN_24_HOURS:
-            self.mark_24_hours = time.time()
-            self.posts_per_24_hours = 0
+            self.tracker.reset_24h()
 
-    def increment(self):
-        self.posts_per_tick += 1
-        self.posts_per_24_hours += 1
+    def increment_success(self):
+        self.tracker.increment_up()
+
+    def increment_failure(self):
+        self.tracker.increment_down()
 
 
 class SessionPerformanceTicker(WorkerPerformanceTicker):
     def __init__(self, logger):
-        super(SessionPerformanceTicker, self).__init__(logger)
-        self.updates_per_24_hours = 0
-        self.updates_per_tick = 0
-
-    def _run_tick_thread(self):
-        self._print_footprint()
-        self.logger.info('Inserts/Updates. In last {0:d} seconds: {1:d}/{2:d}. In last 24 hours: {3:d}/{4:d};'
-            .format(self.interval,
-                    self.posts_per_tick,
-                    self.updates_per_tick,
-                    self.posts_per_24_hours,
-                    self.updates_per_24_hours))
-
-        self.posts_per_tick = 0
-        self.updates_per_tick = 0
-        if time.time() - self.mark_24_hours > self.SECONDS_IN_24_HOURS:
-            self.mark_24_hours = time.time()
-            self.posts_per_24_hours = 0
-            self.updates_per_24_hours = 0
+        super(SessionPerformanceTicker, self).__init__(logger, tracker_up_name='Inserts', tracker_down_name='Updates')
 
     def increment_insert(self):
-        super(SessionPerformanceTicker, self).increment()
+        super(SessionPerformanceTicker, self).increment_success()
 
     def increment_update(self):
-        self.updates_per_tick += 1
-        self.updates_per_24_hours += 1
+        super(SessionPerformanceTicker, self).increment_failure()
 
 
 class AggregatorPerformanceTicker(WorkerPerformanceTicker):
