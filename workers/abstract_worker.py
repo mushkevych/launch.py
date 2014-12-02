@@ -1,23 +1,15 @@
-"""
-Created on 2011-02-01
-
-@author: Bohdan Mushkevych
-"""
+__author__ = 'Bohdan Mushkevych'
 
 from settings import settings
-from system.performance_ticker import WorkerPerformanceTicker
+from system.performance_tracker import SimpleTracker
 from system.synergy_process import SynergyProcess
 
 from threading import Thread
 
 
 class AbstractWorker(SynergyProcess):
-    """
-    class works as an abstract basement for all workers and aggregators
-    """
-
     def __init__(self, process_name):
-        """@param process_name: id of the process, the worker will be performing """
+        """:param process_name: id of the process, the worker will be performing """
         super(AbstractWorker, self).__init__(process_name)
         self._init_performance_ticker(self.logger)
 
@@ -35,7 +27,7 @@ class AbstractWorker(SynergyProcess):
 
     # ********************** abstract methods ****************************
     def _init_performance_ticker(self, logger):
-        self.performance_ticker = WorkerPerformanceTicker(logger)
+        self.performance_ticker = SimpleTracker(logger)
         self.performance_ticker.start()
         
     # ********************** thread-related methods ****************************

@@ -59,7 +59,7 @@ def go_to_ve():
     # two options are possible
     if not path.abspath(sys.prefix) == VE_ROOT:
         # Option A: we are in the parental process that was called from command line like
-        # $> ./launch.py --main -app NAME
+        # $> ./launch.py --run -app NAME
         # in this case sys.prefix points to Global Interpreter
         python = get_python()
         retcode = subprocess.call([python, __file__] + sys.argv[1:])
@@ -175,7 +175,7 @@ def stop_process(options):
 
     try:
         pid = process_helper.get_process_pid(options.app)
-        if pid is None or process_helper.poll_process(options.app) == False:
+        if pid is None or process_helper.poll_process(options.app) is False:
             message = 'ERROR: Process %r is already terminated %r\n' % (options.app, pid)
             sys.stderr.write(message)
             sys.exit(1)
@@ -233,7 +233,7 @@ def run_tests(options):
     try:
         unittest.main(module=None, defaultTest='__main__.load_all_tests',
                       argv=argv)
-    except SystemExit, e:
+    except SystemExit as e:
         if e.code == 0:
             logging.info('PASS')
         else:

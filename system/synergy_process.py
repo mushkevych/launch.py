@@ -1,8 +1,5 @@
-"""
-Created on 2011-06-20
+__author__ = 'Bohdan Mushkevych'
 
-@author: Bohdan Mushkevych
-"""
 import setproctitle
 
 from settings import settings

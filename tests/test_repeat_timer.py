@@ -1,10 +1,9 @@
-"""
-@author: Bohdan Mushkevych
-"""
+__author__ = 'Bohdan Mushkevych'
 
+import time
 import unittest
 from datetime import datetime
-import time
+
 from system import repeat_timer
 
 
@@ -37,6 +36,7 @@ class TestRepeatTimer(unittest.TestCase):
         self.obj.start()
         time.sleep(TestRepeatTimer.INTERVAL)
         self.obj.cancel()
+        assert True
 
     def test_cancellation(self):
         self.obj = repeat_timer.RepeatTimer(TestRepeatTimer.INTERVAL,
@@ -55,6 +55,7 @@ class TestRepeatTimer(unittest.TestCase):
         self.obj.trigger()
         self.obj.cancel()
         time.sleep(TestRepeatTimer.INTERVAL)
+        assert True
 
     def test_trigger_with_continuation(self):
         self.obj = repeat_timer.RepeatTimer(TestRepeatTimer.INTERVAL - 1,
@@ -64,6 +65,8 @@ class TestRepeatTimer(unittest.TestCase):
         self.obj.trigger()
         time.sleep(TestRepeatTimer.INTERVAL)
         self.obj.cancel()
+        assert True
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,8 +1,4 @@
-"""
-Created on 2011-06-15
-
-@author: Bohdan Mushkevych
-"""
+__author__ = 'Bohdan Mushkevych'
 
 import sys
 import types
@@ -54,8 +50,10 @@ def start_by_process_name(process_name, *args):
     """
     Function starts the process by:
     1. retrieving its fully specified path name
-    2. if the path name ends with starter method - then creates an instance of the wrapping class and calls <code>starter(*args)</code> method on it
-    3. if the path name ends with starter function - then retrieves its module and calls <code>starter(*args)</code> function on it
+    2. if the path name ends with starter method - then creates an instance of the wrapping class
+        and calls <code>starter(*args)</code> method on it
+    3. if the path name ends with starter function - then retrieves its module
+        and calls <code>starter(*args)</code> function on it
     """
     sys.stdout.write('INFO: Starter path %r \n' % ProcessContext.get_classname(process_name))
     t, m, starter = get_class(ProcessContext.get_classname(process_name))

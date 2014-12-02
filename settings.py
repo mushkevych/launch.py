@@ -13,8 +13,7 @@ settings = dict(
     under_test=False
 )
 
-# For now just two level... we can have configs for all deployments
-# Need to have a better way for switching these
+# Update current dict with the environment-specific settings
 try:
     overrides = __import__('settings_' + ENVIRONMENT)
 except:

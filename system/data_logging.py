@@ -1,8 +1,4 @@
-"""
-Created on 2011-02-10
-
-@author: Bohdan Mushkevych
-"""
+__author__ = 'Bohdan Mushkevych'
 
 import sys
 import logging
@@ -18,8 +14,8 @@ class Logger(object):
     def __init__(self, file_name, context):
         """
         Constructor: dictionary of loggers available for this Python process
-        @param file_name: path+name of the output file
-        @param context: tag that is printed ahead of every logged message
+        :param file_name: path+name of the output file
+        :param context: tag that is printed ahead of every logged message
         """
         self.logger = logging.getLogger(context)
 
@@ -43,12 +39,10 @@ class Logger(object):
         roto_file_handler.setFormatter(roto_file_formatter)
         self.logger.addHandler(roto_file_handler)
 
-        # ATTENTION: redirecting stdout to this logger for Production mode only
-        # stderr should be redirected to stdout by Supervisor
-
-        # While under_test, tools like xml_unittest_runner are doing complex sys.stdXXX reassignments
+        # While under_test, tools as xml_unittest_runner are doing complex sys.stdXXX reassignments
         if not settings['under_test']:
             sys.stdout = self
+            sys.stderr = self
 
     def get_logger(self):
         return self.logger
@@ -67,7 +61,7 @@ class Logger(object):
         """ is the sys.stdout attached to the terminal?
         python -c "import sys; print(sys.stdout.isatty())" (should write True)
         python -c "import sys; print(sys.stdout.isatty())" | grep . (should write False).
-        @return: False, indicating that the output is pipped or redirected
+        :return: False, indicating that the output is pipped or redirected
         """
         return False
 
