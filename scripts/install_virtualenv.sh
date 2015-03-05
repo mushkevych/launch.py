@@ -65,8 +65,8 @@ fi
 . $2/bin/activate
 
 vendor=$1/vendors
-cd $vendor
+cd ${vendor}
 
 for package in "${packagelist[@]}"; do   # The quotes are necessary here
-    $easy_install_bin ${vendor}/${package}
+    ${easy_install_bin} ${vendor}/${package}
 done
