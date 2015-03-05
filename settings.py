@@ -5,11 +5,11 @@ settings = dict(
     process_prefix='Synergy',   # global prefix that is added to every process name started for synergy-data
     process_cwd='/mnt/tmp',     # daemonized process working directory, where it can create .cache and other folders
 
-    log_directory='/mnt/log/synergy-data/', 
-    pid_directory='/mnt/log/synergy-data/',
+    log_directory='/mnt/logs/synergy-data/',
+    pid_directory='/mnt/logs/synergy-data/',
 
-    perf_ticker_interval=30,                        # seconds between performance ticker messages
-    debug=False,                                    # if True - logger is given additional "console" adapter
+    perf_ticker_interval=60,    # seconds between performance ticker messages
+    debug=False,                # if True - logger is given additional "console" adapter
     under_test=False
 )
 

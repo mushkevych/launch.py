@@ -11,13 +11,13 @@ class Logger(object):
     Logger presents standard API to log messages and store them for future analysis
     """
 
-    def __init__(self, file_name, context):
+    def __init__(self, file_name, log_tag):
         """
         Constructor: dictionary of loggers available for this Python process
         :param file_name: path+name of the output file
-        :param context: tag that is printed ahead of every logged message
+        :param log_tag: tag that is printed ahead of every logged message
         """
-        self.logger = logging.getLogger(context)
+        self.logger = logging.getLogger(log_tag)
 
         if settings['under_test']:
             # ATTENTION: while running as stand-alone process, stdout and stderr must be muted and redirected to file
@@ -72,5 +72,5 @@ if __name__ == '__main__':
     process_name = 'TestAggregator'
     logger = ProcessContext.get_logger(process_name)
     logger.info('test_message')
-    print 'regular print message'
+    print('regular print message')
     sys.stdout.flush()

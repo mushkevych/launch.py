@@ -7,10 +7,11 @@ Python scripts to setup your virtual env + few convenient tools like configurati
 
 launch.py is almost a framework... tiny, convenient and very useful  
 it features:
+
 * daemonizer - all you need to run your code as a daemon is the full path of the starter method/function (such as workers.example_script_worker.main)
 * django-style configuration management tool - settings.py
 * single interface to install, run, test and analyze the project codebase
-* "ironclad" support of virtual environment 
+* "ironclad" support for virtual environment for both Python 2.7+ and 3
 * roto logging, pid file tracking
 * few other convenient tools
 
@@ -29,7 +30,8 @@ it features:
 
 ## license: ##
 
-Modified BSD License. Refer to LICENSE for details.
+[Modified BSD License.](http://en.wikipedia.org/wiki/BSD_licenses#3-clause_license_.28.22Revised_BSD_License.22.2C_.22New_BSD_License.22.2C_or_.22Modified_BSD_License.22.29)  
+Refer to LICENSE for details.
 
 ## metafile: ##
 

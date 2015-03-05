@@ -70,8 +70,8 @@ def go_to_ve():
         pass
 
 
-def install_environment(root):
-    """Install our virtual environment; removing the old one if it exists"""
+def install_environment_p2(root):
+    """Install virtual environment for Python 2.7+; removing the old one if it exists"""
     sys.stdout.write('Installing virtualenv into %s \n' % root)
     try:
         import virtualenv
@@ -84,14 +84,27 @@ def install_environment(root):
         shutil.rmtree(root)
     virtualenv.logger = virtualenv.Logger(consumers=[])
     virtualenv.create_environment(root, site_packages=False)
-    ret_code = subprocess.call([VE_SCRIPT, PROJECT_ROOT, root])
+    ret_code = subprocess.call([VE_SCRIPT, PROJECT_ROOT, root, str(sys.version_info[0])])
+    sys.exit(ret_code)
+
+
+def install_environment_p3(root):
+    """Install virtual environment for Python 3.3+; removing the old one if it exists"""
+    sys.stdout.write('Installing virtualenv into %s \n' % root)
+    import venv
+    builder = venv.EnvBuilder(system_site_packages=False, clear=True, symlinks=False, upgrade=False)
+    builder.create(root)
+    ret_code = subprocess.call([VE_SCRIPT, PROJECT_ROOT, root, str(sys.version_info[0])])
     sys.exit(ret_code)
 
 
 def install_or_switch_to_virtualenv(options):
     """Installs, switches, or bails"""
     if options.install_ve:
-        install_environment(VE_ROOT)
+        if sys.version_info < (3, 3):
+            install_environment_p2(VE_ROOT)
+        else:
+            install_environment_p3(VE_ROOT)
     elif path.exists(VE_ROOT):
         go_to_ve()
     else:

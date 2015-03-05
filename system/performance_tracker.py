@@ -22,16 +22,18 @@ class FootprintCalculator(object):
             s = s[:-3]
         return s + '\''.join(reversed(groups))
 
-    def get_snapshot_as_list(self):
+    @property
+    def document(self):
         ps = psutil.Process(self.pid)
-        return (self.group(ps.get_memory_info()[0]),
-                self.group(ps.get_memory_info()[1]),
-                '%02d' % ps.get_cpu_percent(),
-                self.group(psutil.phymem_usage().free),
-                self.group(psutil.virtmem_usage().free))
+        return {'memory_rss': self.group(ps.get_memory_info()[0]),
+                'memory_vms': self.group(ps.get_memory_info()[1]),
+                'cpu_utilization': '%02d' % ps.get_cpu_percent(),
+                'mem_virtual_free': self.group(psutil.virtual_memory().free),
+                'mem_swap_free': self.group(psutil.swap_memory().free)}
 
     def get_snapshot(self):
-        resp = 'Footprint: RSS=%r VMS=%r CPU=%r; Available: PHYS=%r VIRT=%r' % self.get_snapshot_as_list()
+        resp = 'Footprint: RSS={memory_rss} VMS={memory_vms} CPU={cpu_utilization}; ' \
+               'Available: PHYS={mem_virtual_free} VIRT={mem_swap_free}'.format(**self.document)
         return resp
 
 
@@ -124,7 +126,7 @@ class TickerThread(object):
             self.mark_24_hours = current_time
 
         tracker_outputs = []
-        for tracker_name, tracker in self.trackers.iteritems():
+        for tracker_name, tracker in self.trackers.items():
             tracker_outputs.append(tracker.to_string(self.interval))
             tracker.reset_tick()
             if do_24h_reset:
