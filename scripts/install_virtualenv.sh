@@ -44,7 +44,7 @@ elif [[ $3 == 3* ]]; then
     export PYTHONPATH="$2/lib/python$3/site-packages/"
     easy_install_bin="easy_install3 --prefix=$2"
 else
-    echo "Python major version $3 is not yet supported"
+    echo "Python version $3 is not yet supported"
     exit 1
 fi
 
