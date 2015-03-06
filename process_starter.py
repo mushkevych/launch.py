@@ -2,6 +2,7 @@ __author__ = 'Bohdan Mushkevych'
 
 import sys
 import types
+from six import class_types
 
 from system.process_context import ProcessContext
 
@@ -15,7 +16,7 @@ def get_class(kls):
     :return tuple (type, object, starter)
      for instance:
      - (FunctionType, <function_main>, None)
-     - (ClassType, <Class_...>, 'start')
+     - (type, <Class_...>, 'start')
     """
     parts = kls.split('.')
     try:
@@ -34,8 +35,8 @@ def get_class(kls):
         starter = parts[i:]
         m = getattr(m, comp)
 
-        if isinstance(m, (type, types.ClassType)):
-            t = types.ClassType
+        if isinstance(m, class_types):
+            t = type
             starter = None if len(parts[i:]) == 1 else ".".join(parts[i + 1:])
             break
         if isinstance(m, (type, types.FunctionType)):
@@ -57,7 +58,7 @@ def start_by_process_name(process_name, *args):
     """
     sys.stdout.write('INFO: Starter path %r \n' % ProcessContext.get_classname(process_name))
     t, m, starter = get_class(ProcessContext.get_classname(process_name))
-    if isinstance(m, (type, types.ClassType)):
+    if isinstance(m, class_types):
         sys.stdout.write('INFO: Starting process by calling starter method %r \n' % starter)
         instance = m(process_name)
         method = getattr(instance, starter)

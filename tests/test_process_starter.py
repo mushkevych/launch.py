@@ -3,6 +3,7 @@ __author__ = 'Bohdan Mushkevych'
 import types
 import unittest
 import process_starter
+from six import class_types
 
 
 def main_function(*args):
@@ -22,12 +23,12 @@ class NewClass(object):
 class TestProcessStarter(unittest.TestCase):
     def test_type_old_class(self):
         t, m, starter = process_starter.get_class('tests.test_process_starter.OldClass')
-        assert isinstance(m, (type, types.ClassType))
+        assert isinstance(m, class_types)
         assert starter is None
 
     def test_type_new_class(self):
         t, m, starter = process_starter.get_class('tests.test_process_starter.NewClass')
-        assert isinstance(m, (type, types.ClassType))
+        assert isinstance(m, class_types)
         assert starter is None
 
     def test_type_function(self):
@@ -37,17 +38,17 @@ class TestProcessStarter(unittest.TestCase):
 
     def test_old_class_method(self):
         t, m, starter = process_starter.get_class('tests.test_process_starter.OldClass.starter_method')
-        assert isinstance(m, (type, types.ClassType))
+        assert isinstance(m, class_types)
         assert starter == 'starter_method'
 
     def test_not_class(self):
         t, m, starter = process_starter.get_class('tests.test_process_starter.main_function')
-        assert not isinstance(m, (type, types.ClassType))
+        assert not isinstance(m, class_types)
         assert starter is None
 
     def test_starter_method(self):
         t, m, starter = process_starter.get_class('tests.test_process_starter.NewClass.starter_method')
-        assert isinstance(m, (type, types.ClassType))
+        assert isinstance(m, class_types)
         assert starter == 'starter_method'
 
         instance = getattr(m, starter)
@@ -61,7 +62,6 @@ class TestProcessStarter(unittest.TestCase):
     def test_starting_function(self):
         from tests.ut_process_context import PROCESS_SCRIPT_EXAMPLE
         process_starter.start_by_process_name(PROCESS_SCRIPT_EXAMPLE, 'parameters')
-
 
 
 if __name__ == '__main__':
