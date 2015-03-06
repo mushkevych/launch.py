@@ -58,10 +58,11 @@ class ProcessContext(object):
         """ creates pid file and writes os.pid() in there """
         pid_filename = cls.get_pid_filename(process_name)
         try:
-            pid_file = open(pid_filename, mode='w')
-            pid_file.write(str(os.getpid()))
+            with open(pid_filename, mode='w') as pid_file:
+                pid_file.write(str(os.getpid()))
         except Exception as e:
-            cls.get_logger(process_name).error('Unable to create pid file at: %s, because of: %r' % (pid_filename, e))
+            cls.get_logger(process_name).error('Unable to create pid file at: {0}, because of: {1}'.
+                                               format(pid_filename, e))
 
     @classmethod
     def remove_pid_file(cls, process_name):
@@ -69,9 +70,10 @@ class ProcessContext(object):
         pid_filename = cls.get_pid_filename(process_name)
         try:
             os.remove(pid_filename)
-            cls.get_logger(process_name).info('Removed pid file at: %s' % pid_filename)
+            cls.get_logger(process_name).info('Removed pid file at: {0}'.format(pid_filename))
         except Exception as e:
-            cls.get_logger(process_name).error('Unable to remove pid file at: %s, because of: %r' % (pid_filename, e))
+            cls.get_logger(process_name).error('Unable to remove pid file at: {0}, because of: {1}'.
+                                               format(pid_filename, e))
 
     @classmethod
     def get_logger(cls, process_name):

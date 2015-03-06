@@ -76,8 +76,9 @@ def install_environment_p2(root, python_version):
         import virtualenv
     except ImportError:
         sys.stdout.write('Installing virtualenv into global interpreter \n')
-        subprocess.call([VE_GLOBAL_SCRIPT, PROJECT_ROOT])
-        import virtualenv
+        ret_code = subprocess.call([VE_GLOBAL_SCRIPT, PROJECT_ROOT])
+        sys.stdout.write('Installation finished with code {0}. Re-run ./launch.py --install_ve \n'.format(ret_code))
+        sys.exit(ret_code)
 
     if path.exists(root):
         shutil.rmtree(root)
@@ -99,7 +100,7 @@ def install_environment_p3(root, python_version):
 def install_or_switch_to_virtualenv(options):
     """Installs, switches, or bails"""
     if options.install_ve:
-        sys.stdout.write('Installing virtualenv into %s \n' % VE_ROOT)
+        sys.stdout.write('Installing virtualenv into {0} \n'.format(VE_ROOT))
         python_version = '.'.join(str(v) for v in sys.version_info[:2])
         if sys.version_info < (3, 3):
             install_environment_p2(VE_ROOT, python_version)
@@ -108,7 +109,7 @@ def install_or_switch_to_virtualenv(options):
     elif path.exists(VE_ROOT):
         go_to_ve()
     else:
-        sys.stdout.write('No virtualenv detected, please run ./launch.py --install_ve \n')
+        sys.stdout.write('No virtualenv detected. Run ./launch.py --install_ve \n')
         sys.exit(1)
 
 
@@ -140,7 +141,7 @@ def valid_process_name(function):
 
     def _wrapper(options, *args, **kwargs):
         if options.app not in ProcessContext.PROCESS_CONTEXT:
-            msg = 'Aborting: application <%r> defined by --app option is unknown. \n' % options.app
+            msg = 'Aborting: application <{0}> defined by --app option is unknown. \n'.format(options.app)
             sys.stdout.write(msg)
             raise ValueError(msg)
         return function(options, *args, **kwargs)
@@ -167,7 +168,7 @@ def start_process(options, args):
         pid = process_helper.get_process_pid(options.app)
         if pid is not None:
             if psutil.pid_exists(pid):
-                message = 'ERROR: Process %r is already running with pid %r\n' % (options.app, pid)
+                message = 'ERROR: Process {0} is already running with pid {1}\n'.format(options.app, pid)
                 sys.stderr.write(message)
                 sys.exit(1)
 
@@ -177,7 +178,7 @@ def start_process(options, args):
         else:
             process_starter.start_by_process_name(options.app, args)
     except Exception as e:
-        sys.stderr.write('Exception on starting %s : %s \n' % (options.app, str(e)))
+        sys.stderr.write('Exception on starting {0} : {1}\n'.format(options.app, str(e)))
         traceback.print_exc(file=sys.stderr)
 
 
@@ -189,13 +190,13 @@ def stop_process(options):
     try:
         pid = process_helper.get_process_pid(options.app)
         if pid is None or process_helper.poll_process(options.app) is False:
-            message = 'ERROR: Process %r is already terminated %r\n' % (options.app, pid)
+            message = 'ERROR: Process {0} is already terminated {1}\n'.format(options.app, pid)
             sys.stderr.write(message)
             sys.exit(1)
 
         process_helper.kill_process(options.app)
     except Exception as e:
-        sys.stderr.write('Exception on killing %s : %s \n' % (options.app, str(e)))
+        sys.stderr.write('Exception on killing {0} : {1}\n'.format(options.app, str(e)))
         traceback.print_exc(file=sys.stderr)
 
 
@@ -224,7 +225,7 @@ def run_lint(options):
 
 def list_processes(options):
     from system.process_context import ProcessContext
-    msg = 'List of registered applications: %r \n' % ProcessContext.PROCESS_CONTEXT.keys()
+    msg = 'List of registered applications: {0} \n'.format(ProcessContext.PROCESS_CONTEXT.keys())
     sys.stdout.write(msg)
 
 
@@ -277,7 +278,7 @@ def run_xunit(options):
 
 
 # Ensure we are running in a virtual environment
-if __name__ == "__main__":
+if __name__ == '__main__':
     parser = init_parser()
     (options, args) = parser.parse_args()
     install_or_switch_to_virtualenv(options)

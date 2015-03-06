@@ -16,13 +16,13 @@ class AbstractWorker(SynergyProcess):
         msg_suffix = 'in Production Mode'
         if settings['under_test']:
             msg_suffix = 'in Testing Mode'
-        self.logger.info('Started %s %s' % (self.process_name, msg_suffix))
+        self.logger.info('Started {0} {1}'.format(self.process_name, msg_suffix))
 
     def __del__(self):
         try:
             self.performance_ticker.cancel()
         except Exception as e:
-            self.logger.error('Exception caught while cancelling the performance_ticker: %s' % str(e))
+            self.logger.error('Exception caught while cancelling the performance_ticker: {0}'.format(str(e)))
         super(AbstractWorker, self).__del__()
 
     # ********************** abstract methods ****************************
