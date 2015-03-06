@@ -17,7 +17,6 @@ class SynergyProcess(object):
         setproctitle.setproctitle(settings['process_prefix'] + self.process_name)
         ProcessContext.create_pid_file(self.process_name)
 
-
     def __del__(self):
         """ removes PID file """
         ProcessContext.remove_pid_file(self.process_name)

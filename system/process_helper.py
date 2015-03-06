@@ -14,9 +14,8 @@ def get_process_pid(process_name):
     """ check for process' pid file and returns pid from there """
     try:
         pid_filename = ProcessContext.get_pid_filename(process_name)
-        pf = open(pid_filename, 'r')
-        pid = int(pf.read().strip())
-        pf.close()
+        with open(pid_filename, mode='r') as pid_file:
+            pid = int(pid_file.read().strip())
     except IOError:
         pid = None
     return pid
