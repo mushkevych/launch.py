@@ -54,9 +54,9 @@ class ProcessContext(object):
     }
 
     @classmethod
-    def create_pid_file(cls, process_name):
+    def create_pid_file(cls, process_name, process_id=None):
         """ creates pid file and writes os.pid() in there """
-        pid_filename = cls.get_pid_filename(process_name)
+        pid_filename = cls.get_pid_filename(process_name, process_id)
         try:
             with open(pid_filename, mode='w') as pid_file:
                 pid_file.write(str(os.getpid()))
@@ -65,9 +65,9 @@ class ProcessContext(object):
                                                format(pid_filename, e))
 
     @classmethod
-    def remove_pid_file(cls, process_name):
+    def remove_pid_file(cls, process_name, process_id=None):
         """ removes pid file """
-        pid_filename = cls.get_pid_filename(process_name)
+        pid_filename = cls.get_pid_filename(process_name, process_id)
         try:
             os.remove(pid_filename)
             cls.get_logger(process_name).info('Removed pid file at: {0}'.format(pid_filename))
@@ -76,13 +76,18 @@ class ProcessContext(object):
                                                format(pid_filename, e))
 
     @classmethod
-    def get_logger(cls, process_name):
+    def get_logger(cls, process_name, process_id=None):
         """ method returns initiated logger"""
         if process_name not in cls.logger_pool:
             file_name = cls.get_log_filename(process_name)
             tag = cls.get_log_tag(process_name)
             cls.logger_pool[process_name] = Logger(file_name, tag)
-        return cls.logger_pool[process_name].get_logger()
+
+        logger = cls.logger_pool[process_name].get_logger()
+        if process_id:
+            return logger.getChild(str(process_id))
+        else:
+            return logger
 
     @classmethod
     def get_record(cls, process_name):
@@ -91,9 +96,12 @@ class ProcessContext(object):
         return cls.PROCESS_CONTEXT[process_name]
 
     @classmethod
-    def get_pid_filename(cls, process_name):
+    def get_pid_filename(cls, process_name, process_id=None):
         """method returns path for the PID FILENAME """
-        return cls.PROCESS_CONTEXT[process_name][_PID_FILENAME]
+        pid_filename = cls.PROCESS_CONTEXT[process_name][_PID_FILENAME]
+        if process_id:
+            pid_filename = pid_filename[:-4] + str(process_id) + pid_filename[-4:]
+        return pid_filename
 
     @classmethod
     def get_classname(cls, process_name):
