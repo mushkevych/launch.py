@@ -239,7 +239,6 @@ def run_tests(parser_args):
         unittest_main(None)
 
 
-# Ensure we are running in a virtual environment
 if __name__ == '__main__':
     parser = init_parser()
     parser_namespace, extra_parameters = parser.parse_known_args()
