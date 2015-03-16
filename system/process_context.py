@@ -50,7 +50,7 @@ class ProcessContext(object):
 
     logger_pool = dict()
 
-    PROCESS_CONTEXT = {
+    CONTEXT = {
     }
 
     @classmethod
@@ -93,12 +93,12 @@ class ProcessContext(object):
     def get_record(cls, process_name):
         """ method returns dictionary of strings, preset
         source collection, target collection, queue name, exchange, routing, etc"""
-        return cls.PROCESS_CONTEXT[process_name]
+        return cls.CONTEXT[process_name]
 
     @classmethod
     def get_pid_filename(cls, process_name, process_id=None):
         """method returns path for the PID FILENAME """
-        pid_filename = cls.PROCESS_CONTEXT[process_name][_PID_FILENAME]
+        pid_filename = cls.CONTEXT[process_name][_PID_FILENAME]
         if process_id:
             pid_filename = pid_filename[:-4] + str(process_id) + pid_filename[-4:]
         return pid_filename
@@ -106,22 +106,22 @@ class ProcessContext(object):
     @classmethod
     def get_classname(cls, process_name):
         """ method returns fully qualified classname of the instance running as process"""
-        return cls.PROCESS_CONTEXT[process_name][_CLASSNAME]
+        return cls.CONTEXT[process_name][_CLASSNAME]
 
     @classmethod
     def get_log_filename(cls, process_name):
         """method returns path for the Log filename"""
-        return cls.PROCESS_CONTEXT[process_name][_LOG_FILENAME]
+        return cls.CONTEXT[process_name][_LOG_FILENAME]
 
     @classmethod
     def get_log_tag(cls, process_name):
         """method returns tag that all logging messages will be marked with"""
-        return cls.PROCESS_CONTEXT[process_name][_LOG_TAG]
+        return cls.CONTEXT[process_name][_LOG_TAG]
 
     @classmethod
     def get_time_qualifier(cls, process_name):
         """ method returns worker/aggregator time scale (like daily or yearly)"""
-        return cls.PROCESS_CONTEXT[process_name][_TIME_QUALIFIER]
+        return cls.CONTEXT[process_name][_TIME_QUALIFIER]
 
 
 if __name__ == '__main__':

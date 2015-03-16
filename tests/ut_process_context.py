@@ -16,19 +16,19 @@ _TOKEN_SCRIPT_EXAMPLE = 'script_example'
 
 def register_unit_test_context():
     """ Function should be called by #setting.enable_test_mode to register UT classes and functionality """
-    ProcessContext.PROCESS_CONTEXT[PROCESS_SCRIPT_EXAMPLE] = _create_context_entry(
+    ProcessContext.CONTEXT[PROCESS_SCRIPT_EXAMPLE] = _create_context_entry(
         process_name=PROCESS_SCRIPT_EXAMPLE,
         classname='workers.example_script_worker.main',
         token=_TOKEN_SCRIPT_EXAMPLE,
         time_qualifier=QUALIFIER_REAL_TIME)
 
-    ProcessContext.PROCESS_CONTEXT[PROCESS_CLASS_EXAMPLE] = _create_context_entry(
+    ProcessContext.CONTEXT[PROCESS_CLASS_EXAMPLE] = _create_context_entry(
         process_name=PROCESS_CLASS_EXAMPLE,
         classname='workers.abstract_worker.AbstractWorker.start',
         token=_TOKEN_CLASS_EXAMPLE,
         time_qualifier=QUALIFIER_DAILY)
 
-    ProcessContext.PROCESS_CONTEXT[PROCESS_UNIT_TEST] = _create_context_entry(
+    ProcessContext.CONTEXT[PROCESS_UNIT_TEST] = _create_context_entry(
         process_name=PROCESS_UNIT_TEST,
         classname='',
         token='unit_test',
