@@ -19,17 +19,17 @@ it features:
 ## usage: ##
 
 * install virtual environment for Python 2.7+:  
-`python2 launch.py -i` 
+`python2 launch.py install` 
 * install virtual environment for Python 3.3+:  
-`python3 launch.py -i` 
+`python3 launch.py install` 
 * run test:   
-`./launch.py -t`
+`./launch.py test`
 * run PyLint:   
-`./launch.py -z`
+`./launch.py test --pylint`
 * start separate Python process by running either script's or class' starter method/function:  
-`./launch.py --run --app APPLICATION_NAME`
+`./launch.py start PROCESS_NAME`
 * run the starter script/method within the same process, so you can see the output in the terminal:  
-`./launch.py --run --app APPLICATION_NAME --interactive`
+`./launch.py start PROCESS_NAME --console`
 
 ## license: ##
 

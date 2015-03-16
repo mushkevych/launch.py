@@ -188,7 +188,7 @@ def run_shell(parser_args):
 
 def list_processes(parser_args):
     from system.process_context import ProcessContext
-    msg = 'List of registered applications: {0} \n'.format(ProcessContext.CONTEXT.keys())
+    msg = 'List of registered processes: {0} \n'.format(ProcessContext.CONTEXT.keys())
     sys.stdout.write(msg)
 
 
