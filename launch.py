@@ -63,8 +63,6 @@ def init_parser():
                             help='measure coverage during unit tests execution')
     test_group.add_argument('-p', '--pylint', action='store_true', help='run pylint on the project')
 
-    main_parser.add_argument('extra_parameters', nargs=argparse.REMAINDER,
-                             help='process/command extra parameters, not parsed by launch.py')
     return main_parser
 
 
@@ -94,7 +92,7 @@ def go_to_ve():
         pass
 
 
-def install_environment_p2(root, python_version):
+def install_virtualenv_p2(root, python_version):
     """Install virtual environment for Python 2.7+; removing the old one if it exists"""
     try:
         import virtualenv
@@ -112,7 +110,7 @@ def install_environment_p2(root, python_version):
     sys.exit(ret_code)
 
 
-def install_environment_p3(root, python_version):
+def install_virtualenv_p3(root, python_version):
     """Install virtual environment for Python 3.3+; removing the old one if it exists"""
     import venv
     builder = venv.EnvBuilder(system_site_packages=False, clear=True, symlinks=False, upgrade=False)
@@ -126,9 +124,9 @@ def install_virtualenv(parser_args):
     sys.stdout.write('Installing virtualenv into {0} \n'.format(VE_ROOT))
     python_version = '.'.join(str(v) for v in sys.version_info[:2])
     if sys.version_info < (3, 3):
-        install_environment_p2(VE_ROOT, python_version)
+        install_virtualenv_p2(VE_ROOT, python_version)
     else:
-        install_environment_p3(VE_ROOT, python_version)
+        install_virtualenv_p3(VE_ROOT, python_version)
 
 
 def query_configuration(parser_args):
@@ -244,7 +242,8 @@ def run_tests(parser_args):
 # Ensure we are running in a virtual environment
 if __name__ == '__main__':
     parser = init_parser()
-    parser_namespace = parser.parse_args()
+    parser_namespace, extra_parameters = parser.parse_known_args()
+    parser_namespace.extra_parameters = extra_parameters
 
     if parser_namespace.func != install_virtualenv:
         # before calling any sub-commands, switch to virtual environment
