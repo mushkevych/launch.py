@@ -220,8 +220,8 @@ def run_tests(parser_args):
         from pylint.reporters.text import ParseableTextReporter
 
         output = sys.stdout
-        if 'outfile' in parser_args and parser_args.outfile:
-            output = open(parser_args.outfile, 'w')
+        if parser_args.outfile:
+            output = parser_args.outfile
 
         config = "--rcfile=" + path.join(PROJECT_ROOT, 'pylint.rc')
         lint.Run([config] + settings.testable_modules,
@@ -231,8 +231,8 @@ def run_tests(parser_args):
         import xmlrunner
 
         output = 'reports'
-        if 'outfile' in parser_args and parser_args.outfile:
-            output = 'reports'
+        if parser_args.outfile:
+            output = parser_args.outfile
         unittest_main(xmlrunner.XMLTestRunner(output=output))
 
     else:
