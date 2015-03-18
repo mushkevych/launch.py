@@ -221,7 +221,7 @@ def run_tests(parser_args):
 
         output = sys.stdout
         if parser_args.outfile:
-            output = parser_args.outfile
+            output = open(parser_args.outfile, 'w')
 
         config = "--rcfile=" + path.join(PROJECT_ROOT, 'pylint.rc')
         lint.Run([config] + settings.testable_modules,
