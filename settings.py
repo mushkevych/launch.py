@@ -35,6 +35,10 @@ test_cases = [
 
 
 def enable_test_mode():
+    if settings['under_test']:
+        # test mode is already enabled
+        return
+
     test_settings = dict(
         debug=True,
         under_test=True,
