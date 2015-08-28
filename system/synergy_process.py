@@ -17,7 +17,7 @@ class SynergyProcess(object):
         # process-related activities
         process_title = settings['process_prefix'] + self.process_name
         if self.process_id:
-            process_title += self.process_id
+            process_title += str(self.process_id)
         setproctitle.setproctitle(process_title)
         ProcessContext.create_pid_file(self.process_name, process_id=self.process_id)
 
