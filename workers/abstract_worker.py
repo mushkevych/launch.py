@@ -13,10 +13,8 @@ class AbstractWorker(SynergyProcess):
         super(AbstractWorker, self).__init__(process_name, process_id)
         self._init_performance_ticker(self.logger)
 
-        msg_suffix = 'in Production Mode'
-        if settings['under_test']:
-            msg_suffix = 'in Testing Mode'
-        self.logger.info('Started {0} {1}'.format(self.process_name, msg_suffix))
+        msg_suffix = 'Testing Mode' if settings['under_test'] else 'Production Mode'
+        self.logger.info('Started {0} in {1}'.format(self.process_name, msg_suffix))
 
     def __del__(self):
         try:
