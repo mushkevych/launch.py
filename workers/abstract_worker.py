@@ -8,9 +8,9 @@ from threading import Thread
 
 
 class AbstractWorker(SynergyProcess):
-    def __init__(self, process_name):
+    def __init__(self, process_name, process_id=None):
         """:param process_name: id of the process, the worker will be performing """
-        super(AbstractWorker, self).__init__(process_name)
+        super(AbstractWorker, self).__init__(process_name, process_id)
         self._init_performance_ticker(self.logger)
 
         msg_suffix = 'in Production Mode'
