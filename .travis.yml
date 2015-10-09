@@ -1,10 +1,15 @@
 language: python
 python:
   - "2.7"
-  - "3.5"
+  - "3.4"
 
 # use container-based travis-ci infrastructure
 sudo: false
+addons:
+  apt:
+    packages:
+    - python3-setuptools
+    - python3-dev
 
 install:
   - mkdir -p /tmp/logs/launchpy

@@ -15,7 +15,7 @@ packagelist=(
 
     "coverage-4.0a5.tar.gz"
     "unittest-xml-reporting-1.11.0.tar.gz"
-    "setproctitle-1.1.8.tar.gz"
+    "setproctitle-1.1.9.tar.gz"
     "psutil-2.2.1.tar.gz"
 )
 
