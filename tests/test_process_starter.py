@@ -1,5 +1,6 @@
 __author__ = 'Bohdan Mushkevych'
 
+import mock
 import types
 import unittest
 import process_starter
@@ -80,7 +81,13 @@ class TestProcessStarter(unittest.TestCase):
             self.assertIsInstance(getattr(_C, 'm'), types.FunctionType)
             self.assertEqual(type(_C.m), types.FunctionType)
 
-    def test_starting_method(self):
+    @mock.patch('workers.abstract_worker.SimpleTracker')
+    def test_starting_method(self, mock_tracker):
+        """
+        performance_ticker must be mocked
+        otherwise they will instantiate threads
+        and prevent Unit Tests from finishing
+        """
         from tests.ut_process_context import PROCESS_CLASS_EXAMPLE
         process_starter.start_by_process_name(PROCESS_CLASS_EXAMPLE, None)
 
