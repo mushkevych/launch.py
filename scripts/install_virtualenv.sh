@@ -65,9 +65,11 @@ if [ `uname` == "Darwin" ]; then
     export CPPFLAGS=-Qunused-arguments
 fi
 
-echo "before source"
+echo "Python version before source: `python --version`"
+echo "Python location before source: `which python`"
 . $2/bin/activate
-echo "after source"
+echo "Python version after source: `python --version`"
+echo "Python location after source: `which python`"
 
 vendor=$1/vendors
 cd ${vendor}
