@@ -6,6 +6,8 @@ sudo: false
 matrix:
   include:
     - python: "2.7"
+      before_install:
+        - pip install virtualenv
 
     - python: "3.4"
       addons:
@@ -16,7 +18,6 @@ matrix:
 
 install:
   - mkdir -p /tmp/logs/launchpy
-  - pip install virtualenv
   - python ./launch.py install
 
 script:

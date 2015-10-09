@@ -1,10 +1,12 @@
 __author__ = 'Bohdan Mushkevych'
 
-import mock
+from six import class_types, PY2, PY3, add_move, MovedModule
+add_move(MovedModule('mock', 'mock', 'unittest.mock'))
+from six.moves import mock
+
 import types
 import unittest
 import process_starter
-from six import class_types, PY2, PY3
 
 
 def main_function(*args):
