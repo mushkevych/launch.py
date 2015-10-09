@@ -48,6 +48,9 @@ else
     exit 1
 fi
 
+echo "PYTHONPATH=${PYTHONPATH}"
+echo "easy_install_bin=${easy_install_bin}"
+
 # ccache speeds up recompilation by caching previous compilations
 which ccache > /dev/null 2>&1
 if [ $? == 0 ]; then
