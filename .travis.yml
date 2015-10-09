@@ -1,0 +1,19 @@
+language: python
+python:
+  - "2.7"
+  - "3.5"
+
+# use container-based travis-ci infrastructure
+sudo: false
+
+install:
+  - mkdir -p /tmp/logs/launchpy
+  - pip install virtualenv
+  - python ./launch.py install
+
+script:
+  - python ./launch.py test
+
+branches:
+  only:
+    - master
