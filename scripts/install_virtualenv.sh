@@ -70,6 +70,7 @@ echo "Python location before source: `which python`"
 . $2/bin/activate
 echo "Python version after source: `python --version`"
 echo "Python location after source: `which python`"
+echo "Env: `env`"
 
 vendor=$1/vendors
 cd ${vendor}

@@ -1,15 +1,15 @@
 __author__ = 'Bohdan Mushkevych'
 
-from six import class_types, PY2, PY3
-
-import types
-import unittest
-import process_starter
-
 try:
     import mock
 except ImportError:
     from unittest import mock
+
+import types
+import unittest
+
+import process_starter
+from six import class_types, PY2, PY3
 
 
 def main_function(*args):
