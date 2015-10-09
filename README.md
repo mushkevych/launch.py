@@ -1,5 +1,6 @@
 launch.py
 =========
+[![Build Status](https://travis-ci.org/mushkevych/launch.py.svg)](https://travis-ci.org/mushkevych/launch.py)  
 
 Python scripts to setup your virtual env + few convenient tools like configuration management, test runner, code analyzer
 
