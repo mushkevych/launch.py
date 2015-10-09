@@ -35,21 +35,21 @@ if [ -z "$3" ]; then
 fi
 
 if [[ $3 == 2* ]]; then
-    easy_install_bin="easy_install"
+    easy_install_bin="easy_install-$3"
 
     # adding python2 specific packages
     packagelist=("virtualenv-12.0.7.tar.gz" "setuptools-14.0.tar.gz" "distribute-0.7.3.zip"
                  "unittest2-1.0.1.tar.gz" "mock-1.0.1.tar.gz" "nose-1.3.4.tar.gz" "${packagelist[@]}")
 elif [[ $3 == 3* ]]; then
     export PYTHONPATH="$2/lib/python$3/site-packages/"
-    easy_install_bin="easy_install3 --prefix=$2"
+    easy_install_bin="easy_install-$3 --prefix=$2"
 else
     echo "Python version $3 is not yet supported"
     exit 1
 fi
 
-echo "PYTHONPATH=${PYTHONPATH}"
-echo "easy_install_bin=${easy_install_bin}"
+echo "DEBUG: PYTHONPATH=${PYTHONPATH}"
+echo "DEBUG: easy_install_bin=${easy_install_bin}"
 
 # ccache speeds up recompilation by caching previous compilations
 which ccache > /dev/null 2>&1
@@ -65,12 +65,7 @@ if [ `uname` == "Darwin" ]; then
     export CPPFLAGS=-Qunused-arguments
 fi
 
-echo "Python version before source: `python --version`"
-echo "Python location before source: `which python`"
 . $2/bin/activate
-echo "Python version after source: `python --version`"
-echo "Python location after source: `which python`"
-echo "Env: `env`"
 
 vendor=$1/vendors
 cd ${vendor}
