@@ -65,7 +65,9 @@ if [ `uname` == "Darwin" ]; then
     export CPPFLAGS=-Qunused-arguments
 fi
 
+echo "before source"
 . $2/bin/activate
+echo "after source"
 
 vendor=$1/vendors
 cd ${vendor}
