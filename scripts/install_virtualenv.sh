@@ -75,6 +75,7 @@ echo "Env: `env`"
 vendor=$1/vendors
 cd ${vendor}
 
+set -x
 for package in "${packagelist[@]}"; do   # The quotes are necessary here
     ${easy_install_bin} ${vendor}/${package}
 done
