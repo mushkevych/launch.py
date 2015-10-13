@@ -15,7 +15,6 @@ class AbstractWorker(SynergyProcess):
 
         msg_suffix = 'Testing Mode' if settings['under_test'] else 'Production Mode'
         self.logger.info('Started {0} in {1}'.format(self.process_name, msg_suffix))
-        self.logger.info('SimpleTracker {0}'.format(self.performance_tracker))
 
     def __del__(self):
         try:
