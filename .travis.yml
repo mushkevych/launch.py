@@ -21,6 +21,7 @@ install:
   - python ./launch.py install
 
 script:
+  - python ./launch.py --help
   - python ./launch.py test
 
 branches:
