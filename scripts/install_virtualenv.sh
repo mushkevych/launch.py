@@ -1,22 +1,48 @@
 #!/bin/bash
 
 # List of packages to install
-packagelist=(
-    "six-1.9.0.tar.gz"
-    "pip-6.0.8.tar.gz"
-    "ipython-3.0.0.tar.gz"
+python2list=(
+    "linecache2-1.0.0.tar.gz"
+    "traceback2-1.4.0.tar.gz"
+    "six-1.10.0.tar.gz"
+    "virtualenv-13.1.2.tar.gz" 
+    "setuptools-18.3.2.tar.gz" 
+    "distribute-0.7.3.zip"
+    "unittest2-1.1.0.tar.gz" 
+    "pbr-1.8.1.tar.gz"
+    "funcsigs-0.4.tar.gz"
+    "mock-1.3.0.tar.gz" 
+    "nose-1.3.7.tar.gz"
+)
+
+python3list=(
+    "six-1.10.0.tar.gz"
+)
+
+commonlist=(
+    "pip-7.1.2.tar.gz"
+
+    # ipython
+    "path.py-8.1.2.tar.gz"
+    "ipython_genutils-0.1.0.tar.gz"
+    "ptyprocess-0.5.tar.gz"
+    "decorator-4.0.4.tar.gz"
+    "pickleshare-0.5.tar.gz"
+    "simplegeneric-0.8.1.zip"
+    "traitlets-4.0.0.tar.gz"
+    "pexpect-4.0.1.tar.gz"
+    "ipython-4.0.0.tar.gz"
 
     # pylint section start
-    "logilab-common-0.63.2.tar.gz"
+    "logilab-common-1.0.2.tar.gz"
     "logilab-astng-0.24.3.tar.gz"
-    "astroid-1.3.5.tar.gz"
-    "pylint-1.4.1.tar.gz"
-    # pylint section end
+    "astroid-1.3.8.tar.gz"
+    "pylint-1.4.4.tar.gz"
 
-    "coverage-4.0a5.tar.gz"
-    "unittest-xml-reporting-1.11.0.tar.gz"
+    "coverage-4.0.tar.gz"
+    "unittest-xml-reporting-1.12.0.tar.gz"
     "setproctitle-1.1.9.tar.gz"
-    "psutil-2.2.1.tar.gz"
+    "psutil-3.2.2.tar.gz"
 )
 
 if [ -z "$1" ]; then
@@ -36,13 +62,11 @@ fi
 
 if [[ $3 == 2* ]]; then
     easy_install_bin="easy_install-$3"
-
-    # adding python2 specific packages
-    packagelist=("virtualenv-12.0.7.tar.gz" "setuptools-14.0.tar.gz" "distribute-0.7.3.zip"
-                 "unittest2-1.0.1.tar.gz" "mock-1.0.1.tar.gz" "nose-1.3.4.tar.gz" "${packagelist[@]}")
+    packagelist=("${python2list[@]}" "${commonlist[@]}")
 elif [[ $3 == 3* ]]; then
     export PYTHONPATH="$2/lib/python$3/site-packages/"
     easy_install_bin="easy_install-$3 --prefix=$2"
+    packagelist=("${python3list[@]}" "${commonlist[@]}")
 else
     echo "Python version $3 is not yet supported"
     exit 1
@@ -70,7 +94,6 @@ fi
 vendor=$1/vendors
 cd ${vendor}
 
-set -x
 for package in "${packagelist[@]}"; do   # The quotes are necessary here
     ${easy_install_bin} ${vendor}/${package}
 done

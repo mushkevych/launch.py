@@ -25,9 +25,9 @@ class FootprintCalculator(object):
     @property
     def document(self):
         ps = psutil.Process(self.pid)
-        return {'memory_rss': self.group(ps.get_memory_info()[0]),
-                'memory_vms': self.group(ps.get_memory_info()[1]),
-                'cpu_utilization': '%02d' % ps.get_cpu_percent(),
+        return {'memory_rss': self.group(ps.memory_info()[0]),
+                'memory_vms': self.group(ps.memory_info()[1]),
+                'cpu_utilization': '%02d' % ps.cpu_percent(),
                 'mem_virtual_free': self.group(psutil.virtual_memory().free),
                 'mem_swap_free': self.group(psutil.swap_memory().free)}
 

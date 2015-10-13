@@ -5,6 +5,7 @@ import setproctitle
 from settings import settings
 from system.process_context import ProcessContext
 
+
 class SynergyProcess(object):
     """ Fundamental class for all processes. Registers logger and renames process to SynergyYYY"""
 

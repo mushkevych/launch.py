@@ -5,6 +5,9 @@ try:
 except ImportError:
     from unittest import mock
 
+from settings import enable_test_mode
+enable_test_mode()
+
 import types
 import unittest
 
@@ -89,7 +92,7 @@ class TestProcessStarter(unittest.TestCase):
     @mock.patch('workers.abstract_worker.SimpleTracker')
     def test_starting_method(self, mock_tracker):
         """
-        performance_ticker must be mocked
+        performance_tracker must be mocked
         otherwise they will instantiate threads
         and prevent Unit Tests from finishing
         """

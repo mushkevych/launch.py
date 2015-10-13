@@ -11,22 +11,22 @@ class AbstractWorker(SynergyProcess):
     def __init__(self, process_name, process_id=None):
         """:param process_name: id of the process, the worker will be performing """
         super(AbstractWorker, self).__init__(process_name, process_id)
-        self._init_performance_ticker(self.logger)
+        self._init_performance_tracker(self.logger)
 
         msg_suffix = 'Testing Mode' if settings['under_test'] else 'Production Mode'
         self.logger.info('Started {0} in {1}'.format(self.process_name, msg_suffix))
 
     def __del__(self):
         try:
-            self.performance_ticker.cancel()
+            self.performance_tracker.cancel()
         except Exception as e:
-            self.logger.error('Exception caught while cancelling the performance_ticker: {0}'.format(str(e)))
+            self.logger.error('Exception caught while cancelling the performance_tracker: {0}'.format(str(e)))
         super(AbstractWorker, self).__del__()
 
     # ********************** abstract methods ****************************
-    def _init_performance_ticker(self, logger):
-        self.performance_ticker = SimpleTracker(logger)
-        self.performance_ticker.start()
+    def _init_performance_tracker(self, logger):
+        self.performance_tracker = SimpleTracker(logger)
+        self.performance_tracker.start()
         
     # ********************** thread-related methods ****************************
     def run(self):

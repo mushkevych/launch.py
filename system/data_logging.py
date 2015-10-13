@@ -9,7 +9,8 @@ from settings import settings
 class Logger(object):
     """ Logger presents wrapper around standard API enriched with formaters and roto handlers """
 
-    def __init__(self, file_name, log_tag, append_to_console=settings['under_test'], redirect_stdstream=not settings['under_test']):
+    def __init__(self, file_name, log_tag,
+                 append_to_console=settings['under_test'], redirect_stdstream=not settings['under_test']):
         """
         :param file_name: path+name of the output file
         :param log_tag: tag that is printed ahead of every logged message
@@ -67,9 +68,10 @@ class Logger(object):
 
 if __name__ == '__main__':
     from system.process_context import ProcessContext
+    from tests.ut_process_context import PROCESS_UNIT_TEST, register_unit_test_context
+    register_unit_test_context()
 
-    process_name = 'TestAggregator'
-    logger = ProcessContext.get_logger(process_name)
+    logger = ProcessContext.get_logger(PROCESS_UNIT_TEST)
     logger.info('test_message')
     print('regular print message')
     sys.stdout.flush()
