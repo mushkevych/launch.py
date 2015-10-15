@@ -2,7 +2,7 @@ __author__ = 'Bohdan Mushkevych'
 
 import os
 
-from system.data_logging import Logger
+from system.system_logger import Logger
 from settings import settings
 
 # User fields
@@ -39,19 +39,19 @@ def _create_context_entry(process_name,
 
 
 class ProcessContext(object):
-    # process_context format: "process_name": {
-    # process_name
-    # log_filename
-    # log_tag
-    # pid_filename
-    # full_classname
-    # time_qualifier
+    # format: "process_name": {
+    #     process_name
+    #     pid_filename
+    #     classname
+    #     log_filename
+    #     log_tag
+    #     time_qualifier
     # }
-
-    logger_pool = dict()
-
     CONTEXT = {
     }
+
+    # format: {"process_name" : system_logger.Logger}
+    LOGGER_POOL = dict()
 
     @classmethod
     def create_pid_file(cls, process_name, process_id=None):
@@ -78,12 +78,12 @@ class ProcessContext(object):
     @classmethod
     def get_logger(cls, process_name, process_id=None):
         """ method returns initiated logger"""
-        if process_name not in cls.logger_pool:
+        if process_name not in cls.LOGGER_POOL:
             file_name = cls.get_log_filename(process_name)
             tag = cls.get_log_tag(process_name)
-            cls.logger_pool[process_name] = Logger(file_name, tag)
+            cls.LOGGER_POOL[process_name] = Logger(file_name, tag)
 
-        logger = cls.logger_pool[process_name].get_logger()
+        logger = cls.LOGGER_POOL[process_name].get_logger()
         if process_id:
             return logger.getChild(str(process_id))
         else:
