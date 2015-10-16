@@ -21,10 +21,10 @@ matrix:
 
 install:
   - mkdir -p /tmp/logs/launchpy
-  - python ./launch.py install
+  - python$TRAVIS_PYTHON_VERSION launch.py install
 
 script:
-  - python ./launch.py test
+  - python$TRAVIS_PYTHON_VERSION launch.py test
 
 branches:
   only:
