@@ -21,6 +21,7 @@ matrix:
           - python3-setuptools
           - python3-dev
       before_install:
+# deactivate Travis-CI Python3 VirtualEnv, as it conflicts with the launch.py one
         - deactivate
 
 install:
