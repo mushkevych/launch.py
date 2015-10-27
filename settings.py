@@ -8,7 +8,7 @@ settings = dict(
     log_directory='/mnt/logs/launchpy/',
     pid_directory='/mnt/logs/launchpy/',
 
-    perf_ticker_interval=60,    # seconds between performance ticker messages
+    perf_ticker_interval=60,    # seconds between performance tracker ticks
 
     debug=False,                # if True, logger.setLevel is set to DEBUG. Otherwise to INFO
 
