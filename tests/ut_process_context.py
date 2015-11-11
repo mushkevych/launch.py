@@ -1,17 +1,16 @@
 __author__ = 'Bohdan Mushkevych'
 
 from system.process_context import ProcessContext, _create_context_entry
-from system.time_qualifier import *
 
 # User fields
-PROCESS_CLASS_EXAMPLE = 'AbstractClassWorker'
-PROCESS_SCRIPT_EXAMPLE = 'ScriptExampleWorker'
+PROCESS_CLASS_EXAMPLE = 'ClassExample'
+PROCESS_SCRIPT_EXAMPLE = 'ScriptExample'
 
 # process provides <process context> to unit testing: such as logger, queue, etc
 PROCESS_UNIT_TEST = 'UnitTest'
 
-_TOKEN_CLASS_EXAMPLE = 'class_example'
-_TOKEN_SCRIPT_EXAMPLE = 'script_example'
+TOKEN_CLASS_EXAMPLE = 'class_example'
+TOKEN_SCRIPT_EXAMPLE = 'script_example'
 
 
 def register_unit_test_context():
@@ -19,17 +18,14 @@ def register_unit_test_context():
     ProcessContext.CONTEXT[PROCESS_SCRIPT_EXAMPLE] = _create_context_entry(
         process_name=PROCESS_SCRIPT_EXAMPLE,
         classname='workers.example_script_worker.main',
-        token=_TOKEN_SCRIPT_EXAMPLE,
-        time_qualifier=QUALIFIER_REAL_TIME)
+        token=TOKEN_SCRIPT_EXAMPLE)
 
     ProcessContext.CONTEXT[PROCESS_CLASS_EXAMPLE] = _create_context_entry(
         process_name=PROCESS_CLASS_EXAMPLE,
         classname='workers.abstract_worker.AbstractWorker.start',
-        token=_TOKEN_CLASS_EXAMPLE,
-        time_qualifier=QUALIFIER_DAILY)
+        token=TOKEN_CLASS_EXAMPLE)
 
     ProcessContext.CONTEXT[PROCESS_UNIT_TEST] = _create_context_entry(
         process_name=PROCESS_UNIT_TEST,
         classname='',
-        token='unit_test',
-        time_qualifier=QUALIFIER_REAL_TIME)
+        token='unit_test')

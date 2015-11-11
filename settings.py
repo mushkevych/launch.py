@@ -32,7 +32,6 @@ testable_modules = [
 ]
 
 test_cases = [
-    'tests.test_time_helper',
     'tests.test_repeat_timer',
     'tests.test_process_starter',
 ]

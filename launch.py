@@ -28,6 +28,7 @@ VE_ROOT = path.join(PROJECT_ROOT, '.ve')
 
 def init_parser():
     from system.process_context import ProcessContext
+    process_names = list(ProcessContext.CONTEXT)
 
     main_parser = argparse.ArgumentParser(prog='launch.py')
     subparsers = main_parser.add_subparsers(title='sub-commands', description='list of available sub-commands')
@@ -43,17 +44,17 @@ def init_parser():
 
     start_parser = subparsers.add_parser('start', help='start a process by name')
     start_parser.set_defaults(func=start_process)
-    start_parser.add_argument('process_name', choices=ProcessContext.CONTEXT.keys())
+    start_parser.add_argument('process_name', choices=process_names)
     start_parser.add_argument('--console', action='store_true', help='process is run in interactive (non-daemon) mode')
 
     stop_parser = subparsers.add_parser('stop', help='kill a process by name')
     stop_parser.set_defaults(func=stop_process)
-    stop_parser.add_argument('process_name', choices=ProcessContext.CONTEXT.keys())
+    stop_parser.add_argument('process_name', choices=process_names)
 
     query_parser = subparsers.add_parser('query',
                                          help='query a process state [RUNNING, TERMINATED] by name')
     query_parser.set_defaults(func=query_configuration)
-    query_parser.add_argument('process_name', choices=ProcessContext.CONTEXT.keys())
+    query_parser.add_argument('process_name', choices=process_names)
 
     test_parser = subparsers.add_parser('test', help='run unit tests from the settings.test_cases list')
     test_parser.add_argument('-o', '--outfile', action='store', help='save report results into a file')
@@ -185,7 +186,8 @@ def run_shell(parser_args):
 
 def list_processes(parser_args):
     from system.process_context import ProcessContext
-    msg = 'List of registered processes: {0} \n'.format(ProcessContext.CONTEXT.keys())
+    process_names = list(ProcessContext.CONTEXT)
+    msg = 'List of registered processes: {0} \n'.format(process_names)
     sys.stdout.write(msg)
 
 

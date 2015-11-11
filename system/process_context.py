@@ -13,28 +13,23 @@ _LOG_FILENAME = 'log_filename'
 _LOG_TAG = 'log_tag'
 _PID_FILENAME = 'pid_filename'
 _CLASSNAME = 'classname'
-_TIME_QUALIFIER = 'time_qualifier'
 
 
 def _create_context_entry(process_name,
                           classname,
                           token,
-                          time_qualifier,
                           pid_file=None,
                           log_file=None):
     """ forms process context entry """
-    if pid_file is None:
-        pid_file = token + time_qualifier + '.pid'
-    if log_file is None:
-        log_file = token + time_qualifier + '.log'
+    pid_file = pid_file if pid_file is not None else '{0}.pid'.format(token)
+    log_file = log_file if log_file is not None else '{0}.log'.format(token)
 
     return {
         _NAME: process_name,
-        _PID_FILENAME: settings['pid_directory'] + pid_file,
+        _PID_FILENAME: os.path.join(settings['pid_directory'], pid_file),
         _CLASSNAME: classname,
-        _LOG_FILENAME: settings['log_directory'] + log_file,
-        _LOG_TAG: token + time_qualifier,
-        _TIME_QUALIFIER: time_qualifier
+        _LOG_FILENAME: os.path.join(settings['pid_directory'], log_file),
+        _LOG_TAG: token,
     }
 
 
@@ -117,11 +112,6 @@ class ProcessContext(object):
     def get_log_tag(cls, process_name):
         """method returns tag that all logging messages will be marked with"""
         return cls.CONTEXT[process_name][_LOG_TAG]
-
-    @classmethod
-    def get_time_qualifier(cls, process_name):
-        """ method returns worker/aggregator time scale (like daily or yearly)"""
-        return cls.CONTEXT[process_name][_TIME_QUALIFIER]
 
 
 if __name__ == '__main__':
