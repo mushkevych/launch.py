@@ -28,7 +28,7 @@ def _create_context_entry(process_name,
         _NAME: process_name,
         _PID_FILENAME: os.path.join(settings['pid_directory'], pid_file),
         _CLASSNAME: classname,
-        _LOG_FILENAME: os.path.join(settings['pid_directory'], log_file),
+        _LOG_FILENAME: os.path.join(settings['log_directory'], log_file),
         _LOG_TAG: token,
     }
 
