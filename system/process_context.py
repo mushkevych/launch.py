@@ -15,12 +15,12 @@ _PID_FILENAME = 'pid_filename'
 _CLASSNAME = 'classname'
 
 
-def _create_context_entry(process_name,
-                          classname,
-                          token,
-                          pid_file=None,
-                          log_file=None):
-    """ forms process context entry """
+def create_context_entry(process_name,
+                         classname,
+                         token,
+                         pid_file=None,
+                         log_file=None):
+    """ creates process context entry """
     pid_file = pid_file if pid_file is not None else '{0}.pid'.format(token)
     log_file = log_file if log_file is not None else '{0}.log'.format(token)
 
@@ -40,7 +40,6 @@ class ProcessContext(object):
     #     classname
     #     log_filename
     #     log_tag
-    #     time_qualifier
     # }
     CONTEXT = {
     }
@@ -83,12 +82,6 @@ class ProcessContext(object):
             return logger.getChild(str(process_id))
         else:
             return logger
-
-    @classmethod
-    def get_record(cls, process_name):
-        """ method returns dictionary of strings, preset
-        source collection, target collection, queue name, exchange, routing, etc"""
-        return cls.CONTEXT[process_name]
 
     @classmethod
     def get_pid_filename(cls, process_name, process_id=None):

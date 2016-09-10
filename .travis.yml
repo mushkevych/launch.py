@@ -24,6 +24,17 @@ matrix:
 # deactivate Travis-CI Python3 VirtualEnv, as it conflicts with the launch.py one
         - deactivate
 
+    - python: "3.5"
+      env: PYTHON_BINARY="python3.4"
+      addons:
+        apt:
+          packages:
+          - python3-setuptools
+          - python3-dev
+      before_install:
+# deactivate Travis-CI Python3 VirtualEnv, as it conflicts with the launch.py one
+        - deactivate
+
 install:
   - mkdir -p /tmp/logs/launchpy
   - ${PYTHON_BINARY} launch.py install

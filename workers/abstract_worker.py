@@ -33,6 +33,6 @@ class AbstractWorker(SynergyProcess):
         """ abstract method to be overridden in children classes """
         self.logger.info('Thread started')
 
-    def start(self, *args):
+    def start(self, *_):
         self.main_thread = Thread(target=self.run)
         self.main_thread.start()
