@@ -25,7 +25,7 @@ matrix:
         - deactivate
 
     - python: "3.5"
-      env: PYTHON_BINARY="python3.4"
+      env: PYTHON_BINARY="python3.5"
       addons:
         apt:
           packages:
